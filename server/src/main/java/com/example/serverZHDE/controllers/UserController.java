@@ -1,7 +1,6 @@
 package com.example.serverZHDE.controllers;
 
-import com.example.serverZHDE.entities.User;
-import com.example.serverZHDE.services.UserService;
+import com.example.serverZHDE.services.TrainCompositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,22 +13,22 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService UserService;
+    private final TrainCompositionService TrainCompositionService;
 
     @Autowired
-    public UserController(UserService UserService) {
-        this.UserService = UserService;
+    public UserController(TrainCompositionService TrainCompositionService) {
+        this.TrainCompositionService = TrainCompositionService;
     }
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody User user) {
-        UserService.create(user);
+        TrainCompositionService.create(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping()
     public ResponseEntity<List<User>> findAll(){
-        final List<User> userList = UserService.findAll();
+        final List<User> userList = TrainCompositionService.findAll();
         return userList != null && !userList.isEmpty()
                 ? new ResponseEntity<>(userList, HttpStatus.OK)
                 : new ResponseEntity<>(userList, HttpStatus.NOT_FOUND);
@@ -37,7 +36,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> find(@PathVariable(name = "id") Long id){
-        final Optional<User> user = UserService.find(id);
+        final Optional<User> user = TrainCompositionService.find(id);
         return user.isPresent()
                 ? new ResponseEntity<>(user, HttpStatus.OK)
                 : new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
@@ -45,19 +44,19 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody User user) {
-        if (UserService.find(id).isEmpty()){
+        if (TrainCompositionService.find(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        UserService.update(id, user);
+        TrainCompositionService.update(id, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
-        if (UserService.find(id).isEmpty()){
+        if (TrainCompositionService.find(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        UserService.delete(id);
+        TrainCompositionService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

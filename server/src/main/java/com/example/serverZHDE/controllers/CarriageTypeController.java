@@ -1,7 +1,7 @@
 package com.example.serverZHDE.controllers;
 
 import com.example.serverZHDE.entities.Stations;
-import com.example.serverZHDE.services.CategoryService;
+import com.example.serverZHDE.services.CarriageTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,24 +12,24 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/categories")
-public class CategoryController {
+public class CarriageTypeController {
 
-    private final CategoryService CategoryService;
+    private final CarriageTypeService CarriageTypeService;
 
     @Autowired
-    public CategoryController(CategoryService CategoryService) {
-        this.CategoryService = CategoryService;
+    public CategoryController(CarriageTypeService CarriageTypeService) {
+        this.CarriageTypeService = CarriageTypeService;
     }
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody Stations stations) {
-        CategoryService.create(stations);
+        CarriageTypeService.create(stations);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping()
     public ResponseEntity<List<Stations>> findAll(){
-        final List<Stations> stationsList = CategoryService.findAll();
+        final List<Stations> stationsList = CarriageTypeService.findAll();
         return stationsList != null && !stationsList.isEmpty()
                 ? new ResponseEntity<>(stationsList, HttpStatus.OK)
                 : new ResponseEntity<>(stationsList, HttpStatus.NOT_FOUND);
@@ -37,7 +37,7 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> find(@PathVariable(name = "id") Long id){
-        final Optional<Stations> category = CategoryService.find(id);
+        final Optional<Stations> category = CarriageTypeService.find(id);
         return category.isPresent()
                 ? new ResponseEntity<>(category, HttpStatus.OK)
                 : new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
@@ -45,19 +45,19 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody Stations stations) {
-        if (CategoryService.find(id).isEmpty()){
+        if (CarriageTypeService.find(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        CategoryService.update(id, stations);
+        CarriageTypeService.update(id, stations);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
-        if (CategoryService.find(id).isEmpty()){
+        if (CarriageTypeService.find(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        CategoryService.delete(id);
+        CarriageTypeService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

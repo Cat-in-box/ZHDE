@@ -1,7 +1,6 @@
 package com.example.serverZHDE.controllers;
 
-import com.example.serverZHDE.entities.Task;
-import com.example.serverZHDE.services.TaskService;
+import com.example.serverZHDE.services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,22 +13,22 @@ import java.util.Optional;
 @RequestMapping("/tasks")
 public class TaskController {
 
-    private final TaskService TaskService;
+    private final ScheduleService ScheduleService;
 
     @Autowired
-    public TaskController(TaskService TaskService) {
-        this.TaskService = TaskService;
+    public TaskController(ScheduleService ScheduleService) {
+        this.ScheduleService = ScheduleService;
     }
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody Task task) {
-        TaskService.create(task);
+        ScheduleService.create(task);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping()
     public ResponseEntity<List<Task>> findAll(){
-        final List<Task> taskList = TaskService.findAll();
+        final List<Task> taskList = ScheduleService.findAll();
         return taskList != null && !taskList.isEmpty()
                 ? new ResponseEntity<>(taskList, HttpStatus.OK)
                 : new ResponseEntity<>(taskList, HttpStatus.NOT_FOUND);
@@ -37,7 +36,7 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> find(@PathVariable(name = "id") Long id){
-        final Optional<Task> task = TaskService.find(id);
+        final Optional<Task> task = ScheduleService.find(id);
         return task.isPresent()
                 ? new ResponseEntity<>(task, HttpStatus.OK)
                 : new ResponseEntity<>(task, HttpStatus.NOT_FOUND);
@@ -45,19 +44,19 @@ public class TaskController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody Task task) {
-        if (TaskService.find(id).isEmpty()){
+        if (ScheduleService.find(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        TaskService.update(id, task);
+        ScheduleService.update(id, task);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
-        if (TaskService.find(id).isEmpty()){
+        if (ScheduleService.find(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        TaskService.delete(id);
+        ScheduleService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
