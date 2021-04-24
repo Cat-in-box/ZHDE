@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/nearstations")
 public class NearStationController {
 
     private final com.example.serverZHDE.services.NearStationService NearStationService;

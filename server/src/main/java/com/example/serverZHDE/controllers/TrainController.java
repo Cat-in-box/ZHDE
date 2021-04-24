@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/trains")
 public class TrainController {
 
     private final TrainService TrainService;

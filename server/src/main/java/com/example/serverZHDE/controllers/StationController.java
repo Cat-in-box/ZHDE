@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/carriagetypes")
+@RequestMapping("/stations")
 public class StationController {
 
     private final StationService StationService;

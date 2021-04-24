@@ -20,10 +20,14 @@ public class Station {
     @Column(name = "station_name")
     private String stationName;
 
-    @OneToMany(mappedBy = "mainStationId")
+    public String getStationName() {
+        return this.stationName;
+    }
+
+    @OneToMany(mappedBy = "mainStation")
     private List<NearStation> nearStationToList;
 
-    @OneToMany(mappedBy = "nearStationId")
+    @OneToMany(mappedBy = "nearStation")
     private List<NearStation> nearStationFromList;
 
     @OneToOne(mappedBy = "departureStation")

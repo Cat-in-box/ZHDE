@@ -22,6 +22,6 @@ public class CarriageType {
     @Column(name = "block_seats_number")
     private Integer blockSeatsNumber;
 
-    @OneToMany(mappedBy = "carriageTypeId")
+    @OneToMany(mappedBy = "carriageType")
     private List<TrainComposition> trainCompositionList;
 }

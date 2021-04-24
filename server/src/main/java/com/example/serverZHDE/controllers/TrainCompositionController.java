@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/traincompositions")
 public class TrainCompositionController {
 
     private final com.example.serverZHDE.services.TrainCompositionService TrainCompositionService;

@@ -24,6 +24,6 @@ public class Trip {
     @JoinColumn(name="destination_station")
     private Station destinationStation;
 
-    @OneToMany(mappedBy = "tripId")
+    @OneToMany(mappedBy = "trip")
     private List<Schedule> scheduleList;
 }
