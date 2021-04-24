@@ -1,4 +1,26 @@
 $(document).ready(function(){
+
+	tableFill()
+	function tableFill() {
+		$.ajax({
+			url: "http://localhost:8080/trips/top5",
+			type: "GET",
+			dataType: "json",
+			success: function (response){  
+				let td = document.querySelectorAll('#top5 td');
+		
+				for( let i = 0; i < td.length; i++ ) {
+					td[i].textContent = i;
+					if( fillFrom < 1 ) break;
+		}
+
+			},
+			error: function(response) {
+				console.log("Что-то пошло не так", error);
+			}
+		});
+	}
+
 	$("#btn1").click(function(){
 		$.ajax({
 			url: "http://localhost:8080/tags",
