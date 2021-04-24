@@ -24,7 +24,7 @@ public class Client {
     private String userPassword;
 
     @Column(name = "passport")
-    private Integer passport;
+    private Long passport;
 
     @Column(name = "last_name")
     private String lastName;
@@ -39,7 +39,7 @@ public class Client {
     private Date dateOfBirth;
 
     @Column(name = "phone_number")
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     @OneToMany(mappedBy = "client")
     private List<Ticket> ticketList;
