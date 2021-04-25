@@ -4,6 +4,7 @@ import com.example.serverZHDE.entities.Schedule;
 import com.example.serverZHDE.entities.Station;
 import com.example.serverZHDE.entities.Ticket;
 import com.example.serverZHDE.entities.Trip;
+import com.example.serverZHDE.services.ScheduleService;
 import com.example.serverZHDE.services.TicketService;
 import com.example.serverZHDE.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,13 @@ import java.util.*;
 public class TripController {
 
     private final TripService TripService;
+    private final ScheduleService ScheduleService;
     private final TicketService TicketService;
 
     @Autowired
-    public TripController(TripService TripService, TicketService TicketService) {
+    public TripController(TripService TripService, ScheduleService ScheduleService, TicketService TicketService) {
         this.TripService = TripService;
+        this.ScheduleService = ScheduleService;
         this.TicketService = TicketService;
     }
 
@@ -67,69 +70,71 @@ public class TripController {
     }
 
     @GetMapping("/top5")
-    public ResponseEntity<List<List<String>>> findTop(){
-        Map<Trip, List<Integer>> tripMap = new Map<Trip, List<Integer>>() {
-            @Override
-            public int size() { return 0; }
-            @Override
-            public boolean isEmpty() { return false; }
-            @Override
-            public boolean containsKey(Object key) { return false; }
-            @Override
-            public boolean containsValue(Object value) { return false; }
-            @Override
-            public List<Integer> get(Object key) { return null; }
-            @Override
-            public List<Integer> put(Trip key, List<Integer> value) { return null; }
-            @Override
-            public List<Integer> remove(Object key) { return null; }
-            @Override
-            public void putAll(Map<? extends Trip, ? extends List<Integer>> m) { }
-            @Override
-            public void clear() {}
-            @Override
-            public Set<Trip> keySet() { return null; }
-            @Override
-            public Collection<List<Integer>> values() { return null; }
-            @Override
-            public Set<Entry<Trip, List<Integer>>> entrySet() { return null; }};
+    public ResponseEntity<List<String>> findTop(){
+        Map<Long, List<Integer>> tripMap = new HashMap<>();
 
-        List<Trip> tripList = TripService.findAll();
-        for (Trip trip : tripList) {
-            tripMap.put(trip, List.of(0,0));
-            Integer listSize = 0;
-            Integer listSum = 0;
-            List<Schedule> scheduleList = trip.getScheduleList();
-            for (Schedule schedule : scheduleList) {
-                List<Ticket> ticketList = schedule.getTicketList();
-                listSize = listSize + ticketList.size();
-                for (Ticket ticket : ticketList) {
-                    listSum = listSum + ticket.getPrice();
-                }
+        System.out.println("Дошли до поиска");
+        List<Ticket> ticketList = TicketService.findAll();
+        System.out.println("Лист билетов");
+        for (Ticket ticket : ticketList) {
+            System.out.println("Зашли в цикл");
+            Long tripId = ticket.getSchedule().getTrip().getId();
+            System.out.println("Дотянулись до трипа " + tripId);
+            System.out.println("Ключи в словаре " + tripMap.keySet());
+            if (tripMap.size()!=0 && tripMap.containsKey(tripId)) {
+                System.out.println("Старый " + tripId + tripMap.get(tripId));
+                Integer newCount = tripMap.get(tripId).get(0)+1;
+                System.out.println(tripMap.get(tripId).get(0) + "+" + 1 + "->" + newCount);
+                Integer newPrice = tripMap.get(tripId).get(1)+ticket.getPrice();
+                System.out.println(tripMap.get(tripId).get(1) + "+" + ticket.getPrice() + "->" + newPrice);
+                tripMap.put(tripId, List.of(newCount, newPrice));
+                System.out.println("Обновили " + tripId + tripMap.get(tripId));
             }
-            tripMap.put(trip, List.of(listSize,listSum));
+            else {
+                System.out.println("Новый");
+                List list = List.of(1, ticket.getPrice());
+                System.out.println("Засунули " + list);
+
+                tripMap.put(tripId, list);
+                System.out.println("Занесли " + tripId + tripMap.get(tripId));
+            }
         }
 
-        List<Integer> tripTicketNumber = List.of(0);
+        System.out.println("Словарь создан " + tripMap.size());
+        System.out.println(tripMap);
+
+        ArrayList<Integer> tripTicketNumber = new ArrayList<>();
+        System.out.println("ТрипТикетНумбер");
         for (List<Integer> tripMapValues : tripMap.values()){
-            tripTicketNumber.add(tripMapValues.indexOf(0));
+            System.out.println("Зашли в цикл");
+            Integer smth = tripMapValues.get(0);
+            System.out.println("Достали элемент " + smth);
+            if (!tripTicketNumber.contains(smth)) {
+                tripTicketNumber.add(smth);
+                System.out.println("Добавили его");
+            }
         }
 
+        System.out.println("Засунули все в лист" + tripTicketNumber);
         Collections.sort(tripTicketNumber);
         Collections.reverse(tripTicketNumber);
+        System.out.println("Отсортировали" + tripTicketNumber);
 
-        List<List<String>> topTripList = List.of(List.of());
-        for (Integer item : tripTicketNumber.subList(0, 5)) {
-            for (Trip key : tripMap.keySet()) {
-                if (tripMap.get(key).indexOf(0) == item) {
-                    Station departureStation = key.getDepartureStation();
-                    Station destinationStation = key.getDestinationStation();
-                    topTripList.add(List.of(departureStation.getStationName(), destinationStation.getStationName(), String.valueOf(tripMap.get(key).indexOf(1)/tripMap.get(key).indexOf(0))));
+        ArrayList<String> topTripList = new ArrayList<>();
+        System.out.println(tripTicketNumber.size());
+        for (Integer item : tripTicketNumber) {
+            for (Long tripId : tripMap.keySet()) {
+                if (tripMap.get(tripId).get(0) == item) {
+                    topTripList.add(TripService.find(tripId).get().getDepartureStation().getStationName());
+                    topTripList.add(TripService.find(tripId).get().getDestinationStation().getStationName());
+                    topTripList.add(String.valueOf(tripMap.get(tripId).get(1)/tripMap.get(tripId).get(0)));
                 }
             }
         }
+        System.out.println("Сделали конечный лист" + topTripList);
+        System.out.println("Обрезали" + topTripList.subList(0,15));
 
-        return !topTripList.isEmpty()
+        return topTripList.size() != 0
                 ? new ResponseEntity<>(topTripList, HttpStatus.OK)
                 : new ResponseEntity<>(topTripList, HttpStatus.NOT_FOUND);
     }

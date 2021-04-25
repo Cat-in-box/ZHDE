@@ -8,11 +8,10 @@ $(document).ready(function(){
 			dataType: "json",
 			success: function (response){  
 				let td = document.querySelectorAll('#top5 td');
-		
+				
 				for( let i = 0; i < td.length; i++ ) {
-					td[i].textContent = i;
-					if( fillFrom < 1 ) break;
-		}
+					td[i].textContent = response[i];
+				}
 
 			},
 			error: function(response) {
