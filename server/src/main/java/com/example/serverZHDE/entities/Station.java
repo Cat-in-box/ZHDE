@@ -30,15 +30,9 @@ public class Station {
     @OneToMany(mappedBy = "nearStation")
     private List<NearStation> nearStationFromList;
 
-    @OneToOne(mappedBy = "departureStation")
-    private Trip tripDeparture;
+    @OneToMany(mappedBy = "departureStation")
+    private List<Trip> tripDepartureList;
 
-    @OneToOne(mappedBy = "destinationStation")
-    private Trip tripDestination;
-
-    @OneToOne(mappedBy = "departureStation")
-    private Ticket ticketDeparture;
-
-    @OneToOne(mappedBy = "destinationStation")
-    private Ticket ticketDestination;
+    @OneToMany(mappedBy = "destinationStation")
+    private List<Trip> tripDestinationList;
 }

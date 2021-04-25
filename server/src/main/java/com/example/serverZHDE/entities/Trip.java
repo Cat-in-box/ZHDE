@@ -16,12 +16,12 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name="departure_station")
+    @ManyToOne
+    @JoinColumn(name="departure_station_id", nullable = false)
     private Station departureStation;
 
-    @OneToOne
-    @JoinColumn(name="destination_station")
+    @ManyToOne
+    @JoinColumn(name="destination_station_id", nullable = false)
     private Station destinationStation;
 
     @OneToMany(mappedBy = "trip")

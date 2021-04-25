@@ -23,14 +23,6 @@ public class Ticket {
     @JoinColumn(name="schedule_id", nullable = false)
     private Schedule schedule;
 
-    @OneToOne
-    @JoinColumn(name="departure_station")
-    private Station departureStation;
-
-    @OneToOne
-    @JoinColumn(name="destination_station")
-    private Station destinationStation;
-
     @Column(name = "railway_carriage")
     private Integer railwayCarriage;
 
