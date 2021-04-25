@@ -125,7 +125,9 @@ public class TripController {
         for (Integer item : tripTicketNumber) {
             for (Long tripId : tripMap.keySet()) {
                 if (tripMap.get(tripId).get(0) == item) {
-                    topTripList.add(List.of(TripService.find(tripId).get().getDepartureStation().getStationName(), TripService.find(tripId).get().getDestinationStation().getStationName(), String.valueOf(tripMap.get(tripId).get(1)/tripMap.get(tripId).get(0))));
+                    topTripList.add(List.of(TripService.find(tripId).get().getDepartureStation().getStationName(),
+                            TripService.find(tripId).get().getDestinationStation().getStationName(),
+                            String.valueOf(tripMap.get(tripId).get(1)/tripMap.get(tripId).get(0))));
                 }
             }
         }
