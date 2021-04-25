@@ -10,7 +10,7 @@ $(document).ready(function(){
 				let td = document.querySelectorAll('#top5 td');
 				
 				for( let i = 0; i < td.length; i++ ) {
-					td[i].textContent = response[i];
+					td[i].textContent = response[Math.floor(i/3)][i%3];
 				}
 
 			},

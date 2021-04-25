@@ -70,7 +70,7 @@ public class TripController {
     }
 
     @GetMapping("/top5")
-    public ResponseEntity<List<String>> findTop(){
+    public ResponseEntity<List<List<String>>> findTop(){
         Map<Long, List<Integer>> tripMap = new HashMap<>();
 
         System.out.println("Дошли до поиска");
@@ -120,22 +120,20 @@ public class TripController {
         Collections.reverse(tripTicketNumber);
         System.out.println("Отсортировали" + tripTicketNumber);
 
-        ArrayList<String> topTripList = new ArrayList<>();
+        ArrayList<List<String>> topTripList = new ArrayList<>();
         System.out.println(tripTicketNumber.size());
         for (Integer item : tripTicketNumber) {
             for (Long tripId : tripMap.keySet()) {
                 if (tripMap.get(tripId).get(0) == item) {
-                    topTripList.add(TripService.find(tripId).get().getDepartureStation().getStationName());
-                    topTripList.add(TripService.find(tripId).get().getDestinationStation().getStationName());
-                    topTripList.add(String.valueOf(tripMap.get(tripId).get(1)/tripMap.get(tripId).get(0)));
+                    topTripList.add(List.of(TripService.find(tripId).get().getDepartureStation().getStationName(), TripService.find(tripId).get().getDestinationStation().getStationName(), String.valueOf(tripMap.get(tripId).get(1)/tripMap.get(tripId).get(0))));
                 }
             }
         }
         System.out.println("Сделали конечный лист" + topTripList);
-        System.out.println("Обрезали" + topTripList.subList(0,15));
+        System.out.println("Обрезали" + topTripList.subList(0,5));
 
         return topTripList.size() != 0
-                ? new ResponseEntity<>(topTripList, HttpStatus.OK)
-                : new ResponseEntity<>(topTripList, HttpStatus.NOT_FOUND);
+                ? new ResponseEntity<>(topTripList.subList(0,5), HttpStatus.OK)
+                : new ResponseEntity<>(topTripList.subList(0,5), HttpStatus.NOT_FOUND);
     }
 }
