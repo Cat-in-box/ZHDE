@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,5 +60,29 @@ public class TicketController {
         }
         TicketService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/my/{id}")
+    public ResponseEntity<ArrayList<List<String>>> myTicket(@PathVariable(name = "id") Long id){
+        System.out.println("Запрос дошел");
+        List<Ticket> ticketList = TicketService.findAll();
+        ArrayList<List<String>> myTickets = new ArrayList<>();
+        for (Ticket ticket : ticketList) {
+            if (ticket.getClient().getId() == id) {
+                myTickets.add(List.of(ticket.getId().toString(),
+                        ticket.getSchedule().getTrip().getDepartureStation().getStationName(),
+                        ticket.getSchedule().getTrip().getDestinationStation().getStationName(),
+                        ticket.getSchedule().getDateAndTime().toString(),
+                        ticket.getSchedule().getTrain().getId().toString(),
+                        ticket.getRailwayCarriage().toString(),
+                        ticket.getPlace().toString(),
+                        ticket.getPrice().toString()));
+            }
+        }
+        System.out.println(myTickets);
+        System.out.println("Отправили ответ");
+        return myTickets.size() != 0
+                ? new ResponseEntity<>(myTickets, HttpStatus.OK)
+                : new ResponseEntity<>(myTickets, HttpStatus.NOT_FOUND);
     }
 }
