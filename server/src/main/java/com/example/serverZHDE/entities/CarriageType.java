@@ -22,6 +22,9 @@ public class CarriageType {
     @Column(name = "block_seats_number")
     private Integer blockSeatsNumber;
 
+    @Column(name = "price")
+    private Integer price;
+
     @OneToMany(mappedBy = "carriageType")
     private List<TrainComposition> trainCompositionList;
 }

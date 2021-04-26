@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,7 @@ public class StationController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping()
+    @GetMapping("/findAll")
     public ResponseEntity<List<Station>> findAll(){
         final List<Station> stationList = StationService.findAll();
         return stationList != null && !stationList.isEmpty()
@@ -59,6 +61,21 @@ public class StationController {
         }
         StationService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllNames")
+    public ResponseEntity<ArrayList<String>> getAllNames(){
+        final List<Station> stationList = StationService.findAll();
+        ArrayList<String> stationNameList = new ArrayList<>();
+        for (Station station : stationList) {
+            stationNameList.add(station.getStationName());
+        }
+
+        Collections.sort(stationNameList);
+
+            return stationNameList != null && !stationNameList.isEmpty()
+                    ? new ResponseEntity<>(stationNameList, HttpStatus.OK)
+                    : new ResponseEntity<>(stationNameList, HttpStatus.NOT_FOUND);
     }
 
 }
