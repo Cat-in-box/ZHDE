@@ -33,11 +33,14 @@ $(document).ready(function(){
 					cell7.innerHTML = response[i][6];
 					cell8.innerHTML = response[i][7];
 				}
-
+				
+				var rowCount = table.rows.length;
+				table.deleteRow(rowCount - 1);
 				
 			},
 			error: function(response) {
-				console.log("Что-то пошло не так", error);
+				let td = document.querySelectorAll('#t-my-tickets td');
+				td[0].textContent = "Билетов не найдено"
 			}
 		});
 	}
