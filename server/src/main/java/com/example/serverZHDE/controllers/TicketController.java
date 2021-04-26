@@ -81,7 +81,7 @@ public class TicketController {
         }
         System.out.println(myTickets);
         System.out.println("Отправили ответ");
-        return myTickets.size() != 0
+        return (ticketList != null && !ticketList.isEmpty() && myTickets.size() != 0)
                 ? new ResponseEntity<>(myTickets, HttpStatus.OK)
                 : new ResponseEntity<>(myTickets, HttpStatus.NOT_FOUND);
     }
