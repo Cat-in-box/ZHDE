@@ -266,6 +266,10 @@
   min-height: 100px;
 }
 
+.u-section-3 .u-focus-on {
+  cursor: pointer;
+}
+
 .u-section-3 .u-table-header-1 {
   font-weight: 700;
   background-image: none;

@@ -6,6 +6,7 @@ import com.example.serverZHDE.entities.TrainComposition;
 import com.example.serverZHDE.services.CarriageTypeService;
 import com.example.serverZHDE.services.ScheduleService;
 import com.example.serverZHDE.services.TrainCompositionService;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/schedules")
@@ -76,15 +74,18 @@ public class ScheduleController {
     @GetMapping("/getAllDates")
     public ResponseEntity<?> getDates(){
         final List<Schedule> scheduleList = ScheduleService.findAll();
-        Format pattern = new SimpleDateFormat("dd.MM.yyyy");
+        Format pattern = new SimpleDateFormat("yyyy.MM.dd");
         ArrayList<String> dateList = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
             dateList.add(pattern.format(schedule.getDateAndTime()));
         }
 
-        return dateList.size() != 0
-                ? new ResponseEntity<>(dateList, HttpStatus.OK)
-                : new ResponseEntity<>(dateList, HttpStatus.NOT_FOUND);
+        Set<String> uniqDateSet = new TreeSet<>();
+        uniqDateSet.addAll(dateList);
+
+        return uniqDateSet.size() != 0
+                ? new ResponseEntity<>(uniqDateSet, HttpStatus.OK)
+                : new ResponseEntity<>(uniqDateSet, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/getSchedule/{from}/{to}/{data}")
@@ -127,7 +128,7 @@ public class ScheduleController {
         System.out.println("Прибытие");
 
         Buf1List.clear();
-        Format pattern = new SimpleDateFormat("dd.MM.yyyy");
+        Format pattern = new SimpleDateFormat("yyyy.MM.dd");
         if (!data.equals("Все")) {
             System.out.println("Дата не любая");
             for (Schedule schedule : Buf2List) {

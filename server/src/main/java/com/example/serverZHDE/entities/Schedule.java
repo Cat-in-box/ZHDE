@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -22,7 +22,7 @@ public class Schedule {
     private Trip trip;
 
     @Column(name = "date_and_time")
-    private Date dateAndTime;
+    private Timestamp dateAndTime;
 
     @ManyToOne
     @JoinColumn(name="train_id", nullable = false)

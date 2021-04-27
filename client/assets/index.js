@@ -34,6 +34,20 @@ $(document).ready(function(){
 		});
 	});
 	
+	$("#b-authorisation").click(function(){
+		$.ajax({
+			url: "http://localhost:8080/tags",
+			type: "POST",
+			dataType: "json",
+			success: function (response){
+				console.log(response);
+			},
+			error: function(response) {
+				console.log("Что-то пошло не так", error);
+			}
+		});
+	});
+
 	$("#authorisation").click(async function(){
 		alert(document.getElementById("login-item").value)
 		alert(document.getElementById("password-item").value)

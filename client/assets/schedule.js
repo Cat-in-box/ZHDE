@@ -109,4 +109,23 @@ $(document).ready(function(){
 		
 		GetSchedule();
 	}
+
+	$('#t-schedule').on('click', '.rowlink', function(){
+		alert("тык");
+	});
+
+	$('#t-schedule tr').click(function() {
+        var href = $(this);
+		alert("тык");
+    });
+
+	function f() {
+		alert(this.innerHTML)
+	}
+	var a = document.getElementsByTagName('th');
+
+	for (i=0; i<a.length; i++) {
+		a[i].onclick = f
+	}
+	
 });
