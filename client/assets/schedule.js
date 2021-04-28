@@ -2,8 +2,8 @@ $(document).ready(function(){
 
 	$(document).ready(function(){
 		stationToFill()
-		DateFill()
-		GetSchedule()
+		dateFill()
+		getSchedule()
 	});
 
 	function clicker(rowNumber) {
@@ -39,7 +39,7 @@ $(document).ready(function(){
 		});
 	}
 
-	function DateFill() {
+	function dateFill() {
 		$.ajax({
 			url: "http://localhost:8080/schedules/getAllDates",
 			type: "GET",
@@ -62,7 +62,7 @@ $(document).ready(function(){
 		});
 	}
 
-	function GetSchedule() {
+	function getSchedule() {
 		//var fromStation = document.getElementById('stations-from').selected;
 		let fromStation = document.getElementById('stations-from').options[document.getElementById('stations-from').selectedIndex].text
 		alert(fromStation);
@@ -121,7 +121,7 @@ $(document).ready(function(){
 			td[i].textContent = "";
 		}
 		
-		GetSchedule();
+		getSchedule();
 	}
 	
 });
