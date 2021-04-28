@@ -1,11 +1,12 @@
 $(document).ready(function(){
 
 	$(document).ready(function(){
-		stationToFill()
-		DateFill()
-		GetSchedule()
+		carriageFill()
+		//getPrice()
+		//GetSchedule()
 	});
 
+	/*
 	function clicker(rowNumber) {
 		alert("тык2");
 		alert(rowNumber);
@@ -15,22 +16,26 @@ $(document).ready(function(){
 		alert(currentTr.cells[0].textContent);
 		window.location.replace("buying.html");
     	};
+	*/
 
-	function stationToFill() {
+	function carriageFill() {
+		let scheduleId = getCookie("selected-schedule-id");
+		alert(scheduleId);
 		$.ajax({
-			url: "http://localhost:8080/stations/getAllNames",
+			url: "http://localhost:8080/traincompositions/carriagenumber/" + scheduleId,
 			type: "GET",
 			dataType: "json",
 			success: function (response){
-				select = document.getElementById('stations-to');
+				select = document.getElementById('carriages');
 
-				for (let i = 0; i<response.length; i++){
+				for (let i = 1; i<response+1; i++){
 					let opt = document.createElement('option');
 					opt.value = i;
-					opt.innerHTML = response[i];
+					opt.innerHTML = i;
 					select.appendChild(opt);
 
 				}
+
 
 			},
 			error: function(response) {
@@ -39,7 +44,8 @@ $(document).ready(function(){
 		});
 	}
 
-	function DateFill() {
+	function getPrice() {
+		let carriageType = document.getElementById('carriages').options[document.getElementById('carriages').selectedIndex].text
 		$.ajax({
 			url: "http://localhost:8080/schedules/getAllDates",
 			type: "GET",
@@ -62,6 +68,7 @@ $(document).ready(function(){
 		});
 	}
 
+	/*
 	function GetSchedule() {
 		//var fromStation = document.getElementById('stations-from').selected;
 		let fromStation = document.getElementById('stations-from').options[document.getElementById('stations-from').selectedIndex].text
@@ -123,5 +130,5 @@ $(document).ready(function(){
 		
 		GetSchedule();
 	}
-	
+	*/
 });

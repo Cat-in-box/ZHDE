@@ -1,12 +1,17 @@
 package com.example.serverZHDE.controllers;
 
+import com.example.serverZHDE.entities.CarriageType;
+import com.example.serverZHDE.entities.Schedule;
 import com.example.serverZHDE.entities.TrainComposition;
+import com.example.serverZHDE.services.CarriageTypeService;
+import com.example.serverZHDE.services.ScheduleService;
 import com.example.serverZHDE.services.TrainCompositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,11 +19,15 @@ import java.util.Optional;
 @RequestMapping("/traincompositions")
 public class TrainCompositionController {
 
-    private final com.example.serverZHDE.services.TrainCompositionService TrainCompositionService;
+    private final TrainCompositionService TrainCompositionService;
+    private final ScheduleService ScheduleService;
+    private  final CarriageTypeService CarriageTypeService;
 
     @Autowired
-    public TrainCompositionController(TrainCompositionService TrainCompositionService) {
+    public TrainCompositionController(TrainCompositionService TrainCompositionService, ScheduleService ScheduleService, CarriageTypeService CarriageTypeService) {
         this.TrainCompositionService = TrainCompositionService;
+        this.ScheduleService = ScheduleService;
+        this.CarriageTypeService = CarriageTypeService;
     }
 
     @PostMapping()
@@ -59,5 +68,48 @@ public class TrainCompositionController {
         }
         TrainCompositionService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/carriagenumber/{scheduleId}")
+    public ResponseEntity<Integer> getCarriageNumber(@PathVariable(name = "scheduleId") String scheduleId){
+        if (scheduleId == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        System.out.println(scheduleId);
+        final Long currentTrainId = ScheduleService.find(Long.parseLong(scheduleId)).get().getTrain().getId();
+        final List<TrainComposition> trainCompositionList = TrainCompositionService.findAll();
+
+        Integer carriageNumber = 0;
+
+        for (TrainComposition trainComposition : trainCompositionList) {
+            if (trainComposition.getTrain().getId() == currentTrainId) {
+                carriageNumber += trainComposition.getCarriageNumber();
+            }
+        }
+
+        return carriageNumber != 0
+                ? new ResponseEntity<>(carriageNumber, HttpStatus.OK)
+                : new ResponseEntity<>(carriageNumber, HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/getprice/{scheduleId}/{carriageNumber}")
+    public ResponseEntity<Integer> getPrice(@PathVariable(name = "scheduleId") String scheduleId, @PathVariable(name = "carriageNumber") String carriageNumber) {
+        if (scheduleId == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        final Long currentTrainId = ScheduleService.find(Long.parseLong(scheduleId)).get().getTrain().getId();
+        final List<CarriageType> carriageTypeList = CarriageTypeService.findAll();
+        final List<TrainComposition> trainCompositionList = TrainCompositionService.findAll();
+
+        for (CarriageType carriageType : carriageTypeList) {
+
+            for (TrainComposition trainComposition : trainCompositionList) {
+                if (trainComposition.getTrain().getId() == currentTrainId) {
+
+                    carriageNumber += trainComposition.getCarriageNumber();
+                }
+            }
+        }
     }
 }
