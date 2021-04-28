@@ -111,8 +111,14 @@ $(document).ready(function(){
 	}
 
 	$('#t-schedule tr').click(function() {
-        var href = $(this);
+		var meow = "";
 		alert("тык2");
+		alert(this);
+		for (let i = 0; i < this.cells.length; i++) {
+			console.log(i);
+			meow = meow + " " + this.cells[i].textContent;
+		}
+		alert(meow);
     	});
 	
 });
