@@ -1,20 +1,10 @@
 $(document).ready(function(){
-
+	
 	$(document).ready(function(){
 		stationToFill()
 		DateFill()
 		GetSchedule()
 	});
-
-	function clicker(rowNumber) {
-		alert("тык2");
-		alert(rowNumber);
-		let currentTr = document.querySelectorAll('#t-schedule tr')[rowNumber];
-		setCookie("selected-schedule-id", currentTr.cells[0].textContent, "1");
-
-		alert(currentTr.cells[0].textContent);
-		window.location.replace("buying.html");
-    	};
 
 	function stationToFill() {
 		$.ajax({
@@ -24,8 +14,8 @@ $(document).ready(function(){
 			success: function (response){
 				select = document.getElementById('stations-to');
 
-				for (let i = 0; i<response.length; i++){
-					let opt = document.createElement('option');
+				for (var i = 0; i<response.length; i++){
+					var opt = document.createElement('option');
 					opt.value = i;
 					opt.innerHTML = response[i];
 					select.appendChild(opt);
@@ -47,8 +37,8 @@ $(document).ready(function(){
 			success: function (response){
 				select = document.getElementById('date');
 
-				for (let i = 0; i<response.length; i++){
-					let opt = document.createElement('option');
+				for (var i = 0; i<response.length; i++){
+					var opt = document.createElement('option');
 					opt.value = i;
 					opt.innerHTML = response[i];
 					select.appendChild(opt);
@@ -64,31 +54,30 @@ $(document).ready(function(){
 
 	function GetSchedule() {
 		//var fromStation = document.getElementById('stations-from').selected;
-		let fromStation = document.getElementById('stations-from').options[document.getElementById('stations-from').selectedIndex].text
+		var fromStation = document.getElementById('stations-from').options[document.getElementById('stations-from').selectedIndex].text
 		alert(fromStation);
-		let toStation = document.getElementById('stations-to').options[document.getElementById('stations-to').selectedIndex].text;
+		var toStation = document.getElementById('stations-to').options[document.getElementById('stations-to').selectedIndex].text;
 		alert(toStation);
-		let tripDate = document.getElementById('date').options[document.getElementById('date').selectedIndex].text;
+		var tripDate = document.getElementById('date').options[document.getElementById('date').selectedIndex].text;
 		alert(tripDate);
 		$.ajax({
 			url: "http://localhost:8080/schedules/getSchedule/" + fromStation + "/" + toStation + "/" + tripDate,
 			type: "GET",
 			dataType: "json",
 			success: function (response){
-				let colCount = $('#t-schedule th').length;
+				var colCount = $('#t-schedule th').length;
 
 				const table = document.getElementById("t-schedule");
 
 				for (let i = 0; i < response.length; i++) {
 					let row = table.insertRow(i + 1);
-					row.addEventListener('click', clicker.bind(null, i + 1));
 					for (let j = 0; j < colCount; j++) {
 						let cell = row.insertCell(j);
 						cell.innerHTML = response[i][j];
 					}
 				}
 				
-				let rowCount = table.rows.length;
+				var rowCount = table.rows.length;
 				table.deleteRow(rowCount - 1);
 				
 			},
@@ -123,5 +112,16 @@ $(document).ready(function(){
 		
 		GetSchedule();
 	}
+
+	$('#t-schedule tr').click(function() {
+		var meow = "";
+		alert("тык2");
+		alert(this);
+		for (let i = 0; i < this.cells.length; i++) {
+			console.log(i);
+			meow = meow + " " + this.cells[i].textContent;
+		}
+		alert(meow);
+    	});
 	
 });
