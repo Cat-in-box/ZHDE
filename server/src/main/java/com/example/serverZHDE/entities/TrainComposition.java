@@ -22,4 +22,7 @@ public class TrainComposition {
     @ManyToOne
     @JoinColumn(name="carriage_type_id", nullable = false)
     private CarriageType carriageType;
+
+    @Column(name = "carriage_number")
+    private Integer carriageNumber;
 }
