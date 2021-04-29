@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,8 +93,8 @@ public class TrainCompositionController {
                 : new ResponseEntity<>(carriageNumber, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/getprice/{scheduleId}/{carriageNumber}")
-    public ResponseEntity<Integer> getPrice(@PathVariable(name = "scheduleId") String scheduleId, @PathVariable(name = "carriageNumber") String carriageNumber) {
+    @GetMapping("/getcarriageinfo/{scheduleId}/{carriageNumber}")
+    public ResponseEntity<List<Integer>> getPrice(@PathVariable(name = "scheduleId") String scheduleId, @PathVariable(name = "carriageNumber") String carriageNumber) {
         if (scheduleId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -102,14 +103,39 @@ public class TrainCompositionController {
         final List<CarriageType> carriageTypeList = CarriageTypeService.findAll();
         final List<TrainComposition> trainCompositionList = TrainCompositionService.findAll();
 
+        ArrayList<TrainComposition> currentTrainCompositionList = new ArrayList<>();
+        for (TrainComposition trainComposition : trainCompositionList) {
+            if (trainComposition.getTrain().getId() == currentTrainId) {
+                currentTrainCompositionList.add(trainComposition);
+            }
+        }
+
+        ArrayList<Long> carriageTypeIdList = new ArrayList<>();
         for (CarriageType carriageType : carriageTypeList) {
+            carriageTypeIdList.add(carriageType.getId());
+        }
 
-            for (TrainComposition trainComposition : trainCompositionList) {
-                if (trainComposition.getTrain().getId() == currentTrainId) {
+        Collections.sort(carriageTypeIdList);
+        Long carriageCounter = Long.parseLong("0");
+        Integer startPlaceNumber = 1;
 
-                    carriageNumber += trainComposition.getCarriageNumber();
+        for (Long carriageTypeId : carriageTypeIdList) {
+            for (TrainComposition currentTrainComposition : currentTrainCompositionList) {
+                if (currentTrainComposition.getCarriageType().getId() == carriageTypeId) {
+                    if (carriageCounter+1 <= Long.parseLong(carriageNumber) &&
+                            Long.parseLong(carriageNumber) <= carriageCounter+currentTrainComposition.getCarriageNumber()) {
+                        return new ResponseEntity<>(List.of(currentTrainComposition.getCarriageType().getPrice(),
+                                currentTrainComposition.getCarriageType().getBlocksNumber(),
+                                currentTrainComposition.getCarriageType().getBlockSeatsNumber(),
+                                startPlaceNumber), HttpStatus.OK);
+                    }
+                    carriageCounter += currentTrainComposition.getCarriageNumber();
+                    startPlaceNumber += currentTrainComposition.getCarriageType().getBlocksNumber() *
+                            currentTrainComposition.getCarriageType().getBlockSeatsNumber();
                 }
             }
         }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
