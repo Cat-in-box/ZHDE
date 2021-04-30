@@ -85,4 +85,22 @@ public class TicketController {
                 ? new ResponseEntity<>(myTickets, HttpStatus.OK)
                 : new ResponseEntity<>(myTickets, HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/getoccupiedplaces/{scheduleId}")
+    public ResponseEntity<?> getOccupiedPlacesList(@PathVariable(name = "scheduleId") Long scheduleId) {
+        final List<Ticket> ticketList = TicketService.findAll();
+        ArrayList<Integer> occupiedPlacesList = new ArrayList<>();
+
+        for (Ticket ticket : ticketList) {
+            if (ticket.getSchedule().getId() == scheduleId) {
+                occupiedPlacesList.add(ticket.getPlace());
+            }
+        }
+
+        System.out.println(occupiedPlacesList);
+
+        return occupiedPlacesList.size() != 0
+                ? new ResponseEntity<>(occupiedPlacesList, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

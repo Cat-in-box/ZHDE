@@ -4,20 +4,9 @@ $(document).ready(function(){
 	alert(scheduleId);
 	eraseCookie("selected-schedule-id");
 	carriageFill()
+	let occupiedPlacesList = new Array();
+	getOccupiedPlaces()
 	getCarriageInfo()
-	//GetSchedule()
-
-	/*
-	function clicker(rowNumber) {
-		alert("тык2");
-		alert(rowNumber);
-		let currentTr = document.querySelectorAll('#t-schedule tr')[rowNumber];
-		setCookie("selected-schedule-id", currentTr.cells[0].textContent, "1");
-
-		alert(currentTr.cells[0].textContent);
-		window.location.replace("buying.html");
-    	};
-	*/
 
 	function carriageFill() {
 		$.ajax({
@@ -27,7 +16,7 @@ $(document).ready(function(){
 			success: function (response){
 				select = document.getElementById('carriages');
 
-				for (let i = 1; i<response+1; i++){
+				for (let i = 2; i<response+1; i++){
 					let opt = document.createElement('option');
 					opt.value = i;
 					opt.innerHTML = i;
@@ -35,15 +24,44 @@ $(document).ready(function(){
 
 				}
 
-
 			},
 			error: function(response) {
 				console.log("Что-то пошло не так", error);
 			}
 		});
-	}
+	};
+
+	function getOccupiedPlaces() {
+		$.ajax({
+			url: "http://localhost:8080/tickets/getoccupiedplaces/" + scheduleId,
+			type: "GET",
+			dataType: "json",
+			success: function (response){
+				alert("ВНИМАНИЕ");
+				alert(response);
+				for (let i = 0; i < response.length; i++) {
+					occupiedPlacesList.push(response[i]);
+				}
+				alert("Получили занятые места");
+			},
+				
+			error: function(error) {
+				console.log("Что-то пошло не так", error);
+			}
+		});
+	};
+
+	function freePlaceChecker(placeNumber, cell, i, j) {
+		if (occupiedPlacesList.contains(Number(placeNumber))) { //ТУТ
+			cell.style.backgroundColor = "#FF6666";
+		} else {
+			cell.style.backgroundColor = "#99FF99";
+			cell.addEventListener('click', clicker.bind(null, i + 1, j));
+		}
+	};
 
 	function getCarriageInfo() {
+		alert(document.getElementById('carriages').options[document.getElementById('carriages').selectedIndex].text);
 		let carriageNumber = document.getElementById('carriages').options[document.getElementById('carriages').selectedIndex].text;
 		alert(carriageNumber);
 		$.ajax({
@@ -59,160 +77,141 @@ $(document).ready(function(){
 				document.getElementById('price').textContent = price;
 
 				const table = document.getElementById("t-places");
+				alert(table);
 				//let colCount = $('#t-places th').length;
 				let colCount = blocksNumber*3 + blocksNumber-1;
+				let rowCount = null;
+				let rowBrick = null;
+				let rowPass = null;
 
 				if (blockSeatsNumber == 2) {
-					let rowCount = 3;
-					let rowBrick = 1;
-					let rowPass = 3;
+					rowCount = 3;
+					rowBrick = 1;
+					rowPass = 3;
 				} else if (blockSeatsNumber == 4) {
-					let rowCount = 4;
-					let rowBrick = 2;
-					let rowPass = 3;
+					rowCount = 4;
+					rowBrick = 2;
+					rowPass = 3;
 				} else if (blockSeatsNumber == 6) {
-					let rowCount = 4;
-					let rowBrick = null;
-					let rowPass = 2;
+					rowCount = 4;
+					rowBrick = null;
+					rowPass = 2;
 				} else if (blockSeatsNumber == 9) {
-					let rowCount = 5;
-					let rowBrick = null;
-					let rowPass = 3;
+					rowCount = 5;
+					rowBrick = null;
+					rowPass = 3;
 				} else {
 					alert("Упс, что-то пошло не так при построении таблицы мест(((( Сообщите мне, если увидили это сообщение!")
 				}
 
-				try {
-					for (let i = 0; i < rowCount; i++) {
-						let row = table.insertRow(i + 1);
-						if ((rowBrick != null) && (i + 1 == rowBrick)) {
-							for (let j = 0; j < colCount; j++) {
-								let cell = row.insertCell(j);
-								cell.innerHTML = "-";
-							}
-						} else if (i + 1 == rowPass) {
-							for (let j = 0; j < colCount; j++) {
-								let cell = row.insertCell(j);
-								cell.innerHTML = "";
-							}
-						} else {
-							for (let j = 0; j < colCount; j++) {
-								let cell = row.insertCell(j);
-								if (j % 2 == 0) {
+				for (let i = 0; i < rowCount; i++) {
+					let row = table.insertRow(i + 1);
+					if ((rowBrick != null) && (i + 1 == rowBrick)) {
+						for (let j = 0; j < colCount; j++) {
+							let cell = row.insertCell(j);
+							cell.innerHTML = "-";
+						}
+					} else if (i + 1 == rowPass) {
+						for (let j = 0; j < colCount; j++) {
+							let cell = row.insertCell(j);
+							cell.innerHTML = "";
+						}
+					} else {
+						for (let j = 0; j < colCount; j++) {
+							let cell = row.insertCell(j);
+							if (i != rowCount-1) {
+								if (j % 4 == 3) {
+									cell.innerHTML = "|";
+								} else if (j % 2 == 0) {
 									if (rowCount == 3) {
 										cell.innerHTML = startPlaceNumber + Math.floor(j/2);
 									} else if (rowCount == 4) {
-										if (i != rowCount-1) {
-											cell.innerHTML = startPlaceNumber + j + Math.abs(i-1);
-										} else {
-											cell.innerHTML = startPlaceNumber-1 + blocksNumber*blockSeatsNumber - Math.floor(j/2)
-										}
+										cell.innerHTML = startPlaceNumber + j + Math.abs(i-1);
 									} else if (rowCount == 5) {
-										if (i != rowCount-1) {
-											cell.innerHTML = startPlaceNumber + Math.floor(j/2)*3 + Math.abs(i-2);
-										} else {
-											cell.innerHTML = startPlaceNumber-1 + blocksNumber*blockSeatsNumber - Math.floor(j/2) //ДОДЕЛАТЬ
-										}
+										cell.innerHTML = startPlaceNumber + Math.floor(j/2)*3 + Math.abs(i-2);
 									}
-									cell.style.backgroundColor = "#99FF99";
-									cell.addEventListener('click', clicker.bind(null, i + 1, j));
-								} else if (j % 4 == 3) {
-									let cell = row.insertCell(j);
-									cell.innerHTML = "|";
+									freePlaceChecker(cell.textContent, cell, i, j);
 								} else {
-									let cell = row.insertCell(j);
 									cell.innerHTML = "";
 								}
-								
+							} else {
+								if (j % 4 == 3) {
+									cell.innerHTML = "|";
+								} else {
+										if ((rowCount == 4) && (j % 2 == 0)) {
+										if (j % 2 == 0) {
+											cell.innerHTML = startPlaceNumber-1 + blocksNumber*blockSeatsNumber - Math.floor(j/2);
+											freePlaceChecker(cell.textContent, cell, i, j);
+										} else {
+											cell.innerHTML = "";
+										}
+									} else if (rowCount == 5) {
+										cell.innerHTML = startPlaceNumber-1 + blocksNumber*blockSeatsNumber - j + Math.floor((j+1)/4)
+										freePlaceChecker(cell.textContent, cell, i, j);
+									}
+								}
 							}
 						}
 					}
-				
 				}
 				
-				let rowCount = table.rows.length;
+				rowCount = table.rows.length;
 				table.deleteRow(rowCount - 1);
-
-				/*
-				select = document.getElementById('t-places');
-
-				for (let i = 0; i<response.length; i++){
-					let opt = document.createElement('option');
-					opt.value = i;
-					opt.innerHTML = response[i];
-					select.appendChild(opt);
-
-				}
-				*/
-
 			},
 			error: function(response) {
 				console.log("Что-то пошло не так", error);
 			}
 		});
-	}
+	};
 
-	/*
-	function GetSchedule() {
-		//var fromStation = document.getElementById('stations-from').selected;
-		let fromStation = document.getElementById('stations-from').options[document.getElementById('stations-from').selectedIndex].text
-		alert(fromStation);
-		let toStation = document.getElementById('stations-to').options[document.getElementById('stations-to').selectedIndex].text;
-		alert(toStation);
-		let tripDate = document.getElementById('date').options[document.getElementById('date').selectedIndex].text;
-		alert(tripDate);
-		$.ajax({
-			url: "http://localhost:8080/schedules/getSchedule/" + fromStation + "/" + toStation + "/" + tripDate,
-			type: "GET",
-			dataType: "json",
-			success: function (response){
-				let colCount = $('#t-schedule th').length;
+	$("#carriages").change(function(){
+		refillCarriageInfo();
+	});
 
-				const table = document.getElementById("t-schedule");
-
-				for (let i = 0; i < response.length; i++) {
-					let row = table.insertRow(i + 1);
-					row.addEventListener('click', clicker.bind(null, i + 1));
-					for (let j = 0; j < colCount; j++) {
-						let cell = row.insertCell(j);
-						cell.innerHTML = response[i][j];
-					}
-				}
-				
-				let rowCount = table.rows.length;
-				table.deleteRow(rowCount - 1);
-				
-			},
-			error: function(response) {
-				let td = document.querySelectorAll('#t-schedule td');
-				td[0].textContent = "Билетов не найдено"
-
-			}
-		});
-	}
-
-	$("#stations-to").change(function(){
-		refillSchedule();
-	})
-
-	$("#date").change(function(){
-		refillSchedule();
-	})
-
-	function refillSchedule() {
-		const table = document.getElementById("t-schedule");
+	function refillCarriageInfo() {
+		const table = document.getElementById("t-places");
 		while (table.rows.length > 2) {
 			table.deleteRow(table.rows.length - 1);
 		}
-
-		let td = document.querySelectorAll('#t-schedule td');
-		td[0].textContent = "Билетов не найдено"
 
 		for (let i = 0; i < td.length; i++) {
 			td[i].textContent = "";
 		}
 		
-		GetSchedule();
+		getCarriageInfo();
+	};
+
+	function clicker(rowNumber) {
+		alert("тык2");
+		alert("Подтвердите покупку билета");
+		
+		let currentTd = document.querySelectorAll('#t-schedule td')[rowNumber];
+		postNewTicket(currentTd.textContent);
+
+		window.location.replace("my-tickets.html");
+    };
+	
+	async function postNewTicket(place) {
+
+		let varData = {
+		"clientId": getCookie("client-id"),
+		"scheduleId": scheduleId,
+		"railwayCarriage": document.getElementById('carriages').options[document.getElementById('carriages').selectedIndex].text,
+		"place": place,
+		"price": document.getElementById('price').textContent
+		};
+		let response = await fetch("http://localhost:8080/tickets", {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify(varData)
+		}, {mode: 'cors'}).then(function (response) {
+			console.log(response);
+			alert("Билет добавлен")
+		}).catch(function (error) {
+			console.log("Не удалось создать билет", error);
+		});
 	}
-	*/
+
 });
