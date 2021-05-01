@@ -116,22 +116,27 @@ public class TrainCompositionController {
         }
 
         Collections.sort(carriageTypeIdList);
-        Long carriageCounter = Long.parseLong("0");
+        Long carriageCounter = Long.parseLong("1");
+        Integer toNextTypeCounter = 0;
         Integer startPlaceNumber = 1;
 
         for (Long carriageTypeId : carriageTypeIdList) {
             for (TrainComposition currentTrainComposition : currentTrainCompositionList) {
                 if (currentTrainComposition.getCarriageType().getId() == carriageTypeId) {
-                    if (carriageCounter+1 <= Long.parseLong(carriageNumber) &&
-                            Long.parseLong(carriageNumber) <= carriageCounter+currentTrainComposition.getCarriageNumber()) {
-                        return new ResponseEntity<>(List.of(currentTrainComposition.getCarriageType().getPrice(),
-                                currentTrainComposition.getCarriageType().getBlocksNumber(),
-                                currentTrainComposition.getCarriageType().getBlockSeatsNumber(),
-                                startPlaceNumber), HttpStatus.OK);
+                    toNextTypeCounter += currentTrainComposition.getCarriageNumber();
+                    while (carriageCounter <= toNextTypeCounter) {
+                        if (carriageCounter == Long.parseLong(carriageNumber)) {
+
+                            return new ResponseEntity<>(List.of(currentTrainComposition.getCarriageType().getPrice(),
+                                    currentTrainComposition.getCarriageType().getBlocksNumber(),
+                                    currentTrainComposition.getCarriageType().getBlockSeatsNumber(),
+                                    startPlaceNumber), HttpStatus.OK);
+                        }
+                        carriageCounter += 1;
+                        startPlaceNumber += currentTrainComposition.getCarriageType().getBlocksNumber() *
+                                currentTrainComposition.getCarriageType().getBlockSeatsNumber();
+                        System.out.println("вагон " + carriageCounter + "начинается с " + startPlaceNumber);
                     }
-                    carriageCounter += currentTrainComposition.getCarriageNumber();
-                    startPlaceNumber += currentTrainComposition.getCarriageType().getBlocksNumber() *
-                            currentTrainComposition.getCarriageType().getBlockSeatsNumber();
                 }
             }
         }

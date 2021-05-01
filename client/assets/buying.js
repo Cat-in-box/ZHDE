@@ -46,17 +46,17 @@ $(document).ready(function(){
 			},
 				
 			error: function(error) {
-				console.log("Что-то пошло не так", error);
+				console.log("На этот рейс не купили ни одного билета");
 			}
 		});
 	};
 
 	function freePlaceChecker(placeNumber, cell, i, j) {
-		if (occupiedPlacesList.contains(Number(placeNumber))) { //ТУТ
+		if (occupiedPlacesList.indexOf(Number(placeNumber))>=0) { //ТУТ
 			cell.style.backgroundColor = "#FF6666";
 		} else {
 			cell.style.backgroundColor = "#99FF99";
-			cell.addEventListener('click', clicker.bind(null, i + 1, j));
+			cell.addEventListener('click', clicker.bind(null, i, j));
 		}
 	};
 
@@ -73,6 +73,8 @@ $(document).ready(function(){
 				let blocksNumber = response[1]
                 let blockSeatsNumber = response[2]
                 let startPlaceNumber = response[3]
+				alert("startPlaceNumber");
+				alert(startPlaceNumber);
 
 				document.getElementById('price').textContent = price;
 
@@ -87,7 +89,7 @@ $(document).ready(function(){
 				if (blockSeatsNumber == 2) {
 					rowCount = 3;
 					rowBrick = 1;
-					rowPass = 3;
+					rowPass = 2;
 				} else if (blockSeatsNumber == 4) {
 					rowCount = 4;
 					rowBrick = 2;
@@ -104,14 +106,14 @@ $(document).ready(function(){
 					alert("Упс, что-то пошло не так при построении таблицы мест(((( Сообщите мне, если увидили это сообщение!")
 				}
 
-				for (let i = 0; i < rowCount; i++) {
-					let row = table.insertRow(i + 1);
-					if ((rowBrick != null) && (i + 1 == rowBrick)) {
+				for (let i = 0; i < rowCount + 1; i++) {
+					let row = table.insertRow(i);
+					if ((rowBrick != null) && (i == rowBrick)) {
 						for (let j = 0; j < colCount; j++) {
 							let cell = row.insertCell(j);
 							cell.innerHTML = "-";
 						}
-					} else if (i + 1 == rowPass) {
+					} else if (i == rowPass) {
 						for (let j = 0; j < colCount; j++) {
 							let cell = row.insertCell(j);
 							cell.innerHTML = "";
@@ -170,10 +172,12 @@ $(document).ready(function(){
 
 	function refillCarriageInfo() {
 		const table = document.getElementById("t-places");
-		while (table.rows.length > 2) {
+		while (table.rows.length > 0) {
 			table.deleteRow(table.rows.length - 1);
 		}
 
+
+		let td = document.querySelectorAll('#t-schedule td');
 		for (let i = 0; i < td.length; i++) {
 			td[i].textContent = "";
 		}
@@ -186,9 +190,9 @@ $(document).ready(function(){
 		alert("Подтвердите покупку билета");
 		
 		let currentTd = document.querySelectorAll('#t-schedule td')[rowNumber];
-		postNewTicket(currentTd.textContent);
+		//postNewTicket(currentTd.textContent);
 
-		window.location.replace("my-tickets.html");
+		//window.location.replace("my-tickets.html");
     };
 	
 	async function postNewTicket(place) {
