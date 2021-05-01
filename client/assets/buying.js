@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+	let user = getCookie("user-id");
+	if (user == null) {
+		alert("Чтобы воспользоваться сервисом, ВОЙДИТЕ или ЗАРЕГИСТРИРУЙТЕСЬ");
+		window.location.replace("index.html");
+	}
+
 	let scheduleId = getCookie("selected-schedule-id");
 	alert(scheduleId);
 	eraseCookie("selected-schedule-id");
@@ -80,7 +86,6 @@ $(document).ready(function(){
 
 				const table = document.getElementById("t-places");
 				alert(table);
-				//let colCount = $('#t-places th').length;
 				let colCount = blocksNumber*3 + blocksNumber-1;
 				let rowCount = null;
 				let rowBrick = null;
@@ -185,12 +190,15 @@ $(document).ready(function(){
 		getCarriageInfo();
 	};
 
-	function clicker(rowNumber) {
+	function clicker(rowNumber, colNumber) {
 		alert("тык2");
 		alert("Подтвердите покупку билета");
-		
-		let currentTd = document.querySelectorAll('#t-schedule td')[rowNumber];
-		//postNewTicket(currentTd.textContent);
+		alert(rowNumber);
+		alert(colNumber);
+
+		let currentTr = document.querySelectorAll('#t-places tr')[rowNumber];
+
+		//postNewTicket(currentTr.cells[colNumber].textContent);
 
 		//window.location.replace("my-tickets.html");
     };

@@ -1,9 +1,15 @@
 $(document).ready(function(){
 
+	let user = getCookie("user-id");
+	if (user == null) {
+		alert("Чтобы воспользоваться сервисом, ВОЙДИТЕ или ЗАРЕГИСТРИРУЙТЕСЬ");
+		window.location.replace("index.html");
+	}
+
 	tableFill()
 	function tableFill() {
 		$.ajax({
-			url: "http://localhost:8080/tickets/my/2",
+			url: "http://localhost:8080/tickets/my/" + user,
 			type: "GET",
 			dataType: "json",
 			success: function (response){  

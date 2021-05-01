@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+	let user = getCookie("user-id");
+	if (user == null) {
+		alert("Чтобы воспользоваться сервисом, ВОЙДИТЕ или ЗАРЕГИСТРИРУЙТЕСЬ");
+		window.location.replace("index.html");
+	}
+
 	$(document).ready(function(){
 		stationToFill()
 		dateFill()
@@ -7,12 +13,9 @@ $(document).ready(function(){
 	});
 
 	function clicker(rowNumber) {
-		alert("тык2");
-		alert(rowNumber);
 		let currentTr = document.querySelectorAll('#t-schedule tr')[rowNumber];
-		setCookie("selected-schedule-id", currentTr.cells[0].textContent, "1");
+		setCookie("selected-schedule-id", currentTr.cells[0].textContent, "10");
 
-		alert(currentTr.cells[0].textContent);
 		window.location.replace("buying.html");
     	};
 
@@ -63,13 +66,9 @@ $(document).ready(function(){
 	}
 
 	function getSchedule() {
-		//var fromStation = document.getElementById('stations-from').selected;
 		let fromStation = document.getElementById('stations-from').options[document.getElementById('stations-from').selectedIndex].text
-		alert(fromStation);
 		let toStation = document.getElementById('stations-to').options[document.getElementById('stations-to').selectedIndex].text;
-		alert(toStation);
 		let tripDate = document.getElementById('date').options[document.getElementById('date').selectedIndex].text;
-		alert(tripDate);
 		$.ajax({
 			url: "http://localhost:8080/schedules/getSchedule/" + fromStation + "/" + toStation + "/" + tripDate,
 			type: "GET",

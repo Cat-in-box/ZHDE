@@ -83,6 +83,14 @@
   margin: 21px auto 22px;
 }
 
+.u-section-3 .u-focus-on {
+  cursor: pointer;
+}
+
+.u-section-3 .u-table-body-tickets {
+  font-size: 1rem;
+}
+
 .u-block-f57c-12 {
   height: 46px;
 }
