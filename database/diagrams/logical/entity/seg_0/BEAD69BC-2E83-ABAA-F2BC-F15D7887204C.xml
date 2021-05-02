@@ -27,7 +27,7 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="type" id="7D4FC442-6A16-FADB-229E-693B65CCBB25">
+<Attribute name="train_type" id="7D4FC442-6A16-FADB-229E-693B65CCBB25">
 <createdBy>anast</createdBy>
 <createdTime>2021-04-14 13:44:57 UTC</createdTime>
 <ownerDesignName>diagrams</ownerDesignName>
@@ -39,7 +39,7 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="year" id="64D1E766-188D-C563-1043-8AEAB7447E8F">
+<Attribute name="issue_year" id="64D1E766-188D-C563-1043-8AEAB7447E8F">
 <createdBy>anast</createdBy>
 <createdTime>2021-04-14 13:46:07 UTC</createdTime>
 <ownerDesignName>diagrams</ownerDesignName>

@@ -99,6 +99,7 @@
 <item key="82CCEEA6-56FD-1DF9-6AC6-6AFAA266A665" value="true"/>
 </engineerTo>
 <referedAttribute>72D98224-1550-5B50-B9A8-C666BAC282C5</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>

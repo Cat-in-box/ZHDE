@@ -39,7 +39,7 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="password" id="223385A8-85E8-0DD6-A508-86A0C6DB18B7">
+<Attribute name="user_password" id="223385A8-85E8-0DD6-A508-86A0C6DB18B7">
 <createdBy>anast</createdBy>
 <createdTime>2021-04-14 14:13:58 UTC</createdTime>
 <ownerDesignName>diagrams</ownerDesignName>
