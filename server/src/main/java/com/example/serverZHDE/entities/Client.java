@@ -8,13 +8,12 @@ import java.sql.Date;
 import java.util.List;
 
 @Entity
-@Data
 @NoArgsConstructor
+@Data
 @Table(name = "Clients")
 public class Client {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "email")

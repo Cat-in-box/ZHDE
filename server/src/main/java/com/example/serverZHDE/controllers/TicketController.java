@@ -110,9 +110,8 @@ public class TicketController {
         Ticket ticket = new Ticket();
 
         System.out.println(ticketInfo);
+        ticket.setId(Long.parseLong(Integer.toString(TicketService.findAll().size()+1)));
         try {
-            Integer id = TicketService.findAll().size();
-            ticket.setId(Long.parseLong(id.toString()));
             ticket.setClient(ClientService.find(Long.parseLong(ticketInfo.get("clientId"))).get());
             System.out.println("#1");
             ticket.setSchedule(ScheduleService.find(Long.parseLong(ticketInfo.get("scheduleId"))).get());

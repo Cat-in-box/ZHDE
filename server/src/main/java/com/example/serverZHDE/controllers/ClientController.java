@@ -28,12 +28,6 @@ public class ClientController {
         this.ClientService = ClientService;
     }
 
-    @PostMapping()
-    public ResponseEntity<?> create(@RequestBody Client client) {
-        ClientService.create(client);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
     @GetMapping()
     public ResponseEntity<List<Client>> findAll(){
         final List<Client> clientList = ClientService.findAll();
@@ -143,6 +137,65 @@ public class ClientController {
         System.out.println(clientInfo);
 
         ClientService.update(id, client);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody HashMap<String, String> clientInfo) {
+        for (Client existClient : ClientService.findAll()) {
+            if (existClient.getEmail().equals(clientInfo.get("email"))){
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            } else if (existClient.getPassport().equals(clientInfo.get("passport"))) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+        }
+
+        Client client = new Client();
+
+        client.setId(Long.parseLong(Integer.toString(ClientService.findAll().size()+1)));
+
+        if (!clientInfo.get("email").equals("") && clientInfo.get("email") != null && clientInfo.get("email").contains("@")) {
+            client.setEmail(clientInfo.get("email"));
+        }
+        if (!clientInfo.get("password").equals("") && clientInfo.get("password") != null && clientInfo.get("password").length()>=8) {
+            client.setUserPassword(clientInfo.get("password"));
+        }
+        if (!clientInfo.get("lastName").equals("") && clientInfo.get("lastName") != null) {
+            client.setLastName(clientInfo.get("lastName"));
+        }
+        if (!clientInfo.get("firstName").equals("") && clientInfo.get("firstName") != null) {
+            client.setFirstName(clientInfo.get("firstName"));
+        }
+        if (!clientInfo.get("patronymic").equals("") && clientInfo.get("patronymic") != null) {
+            client.setPatronymic(clientInfo.get("patronymic"));
+        }
+        if (!clientInfo.get("phoneNumber").equals("") && clientInfo.get("phoneNumber") != null) {
+            if (clientInfo.get("phoneNumber").length() >= 11) {
+                client.setPhoneNumber(Long.parseLong(clientInfo.get("phoneNumber")));
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        if (!clientInfo.get("passport").equals("") && clientInfo.get("passport") != null) {
+            if (clientInfo.get("passport").length() >= 10) {
+                client.setPassport(Long.parseLong(clientInfo.get("passport")));
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        if (!clientInfo.get("dateOfBirth").equals("") && clientInfo.get("dateOfBirth") != null) {
+            try {
+                client.setDateOfBirth(Date.valueOf(clientInfo.get("dateOfBirth")));
+            } catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        System.out.println(clientInfo);
+        System.out.println(client);
+
+        ClientService.create(client);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
