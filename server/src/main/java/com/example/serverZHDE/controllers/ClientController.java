@@ -154,42 +154,33 @@ public class ClientController {
 
         client.setId(Long.parseLong(Integer.toString(ClientService.findAll().size()+1)));
 
-        if (!clientInfo.get("email").equals("") && clientInfo.get("email") != null && clientInfo.get("email").contains("@")) {
+        if (clientInfo.get("email").contains("@")) {
             client.setEmail(clientInfo.get("email"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (!clientInfo.get("password").equals("") && clientInfo.get("password") != null && clientInfo.get("password").length()>=8) {
+        if (clientInfo.get("password").length()>=8) {
             client.setUserPassword(clientInfo.get("password"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (!clientInfo.get("lastName").equals("") && clientInfo.get("lastName") != null) {
-            client.setLastName(clientInfo.get("lastName"));
+        client.setLastName(clientInfo.get("lastName"));
+        client.setFirstName(clientInfo.get("firstName"));
+        client.setPatronymic(clientInfo.get("patronymic"));
+        if (clientInfo.get("phoneNumber").length() >= 11) {
+            client.setPhoneNumber(Long.parseLong(clientInfo.get("phoneNumber")));
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (!clientInfo.get("firstName").equals("") && clientInfo.get("firstName") != null) {
-            client.setFirstName(clientInfo.get("firstName"));
+        if (clientInfo.get("passport").length() >= 10) {
+            client.setPassport(Long.parseLong(clientInfo.get("passport")));
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (!clientInfo.get("patronymic").equals("") && clientInfo.get("patronymic") != null) {
-            client.setPatronymic(clientInfo.get("patronymic"));
-        }
-        if (!clientInfo.get("phoneNumber").equals("") && clientInfo.get("phoneNumber") != null) {
-            if (clientInfo.get("phoneNumber").length() >= 11) {
-                client.setPhoneNumber(Long.parseLong(clientInfo.get("phoneNumber")));
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
-        if (!clientInfo.get("passport").equals("") && clientInfo.get("passport") != null) {
-            if (clientInfo.get("passport").length() >= 10) {
-                client.setPassport(Long.parseLong(clientInfo.get("passport")));
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
-
-        if (!clientInfo.get("dateOfBirth").equals("") && clientInfo.get("dateOfBirth") != null) {
-            try {
-                client.setDateOfBirth(Date.valueOf(clientInfo.get("dateOfBirth")));
-            } catch (Exception e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+        try {
+            client.setDateOfBirth(Date.valueOf(clientInfo.get("dateOfBirth")));
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         System.out.println(clientInfo);
