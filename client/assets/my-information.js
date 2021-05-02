@@ -8,13 +8,11 @@ $(document).ready(function(){
 	
 	informationFill()
 	function informationFill() {
-		alert(user);
 		$.ajax({
 			url: "http://localhost:8080/clients/info/" + user,
 			type: "GET",
 			dataType: "json",
 			success: function (response){
-				alert(response["email"]);
 				document.getElementById('email').textContent = response["email"];
 				document.getElementById('password').textContent = response["userPassword"];
 				document.getElementById('passport').placeholder = response["passport"];

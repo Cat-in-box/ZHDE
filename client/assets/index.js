@@ -28,7 +28,6 @@ $(document).ready(function(){
 			type: "GET",
 			dataType: "json",
 			success: function (response){  
-				alert(response);
 				setCookie("user-id", response, "100");
 				window.location.replace("schedule.html");
 			},
@@ -41,38 +40,5 @@ $(document).ready(function(){
 			}
 		});
 	});
-
-	/*
-	$("#b-authorisation").click(async function(){
-		alert(document.getElementById("login-item").value)
-		alert(document.getElementById("password-item").value)
-		let varData = {
-			"login": document.getElementById("login-item").value,
-			"password": document.getElementById("password-item").value
-		};
-		let response = await fetch("http://localhost:8080/clients/authorisation", {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json;charset=utf-8'
-			},
-			body: JSON.stringify(varData)
-		}, {mode: 'cors'}).then(function (response) {
-
-			if (response.status == 200) {
-				alert(response.text());
-				setCookie("user-id", response.text(), "100");
-				window.location.replace("schedule.html");
-			} else if (response.status == 400) {
-				document.getElementById("error-message").textContent = "Неверный пароль";
-            } else {
-                document.getElementById("error-message").textContent = "Кажется, вы еще не зарегистрировались!";
-			}
-
-		}).catch(function (error) {
-			console.log("Что-то пошло не так", error);
-		});
-
-	});
-	*/
 	
 });

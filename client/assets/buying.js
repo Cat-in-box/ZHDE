@@ -12,7 +12,6 @@ $(document).ready(function(){
 		window.location.replace("schedule.html");
 	}
 
-	alert(scheduleId);
 	eraseCookie("selected-schedule-id");
 	carriageFill()
 	let occupiedPlacesList = new Array();
@@ -48,12 +47,9 @@ $(document).ready(function(){
 			type: "GET",
 			dataType: "json",
 			success: function (response){
-				alert("ВНИМАНИЕ");
-				alert(response);
 				for (let i = 0; i < response.length; i++) {
 					occupiedPlacesList.push(response[i]);
 				}
-				alert("Получили занятые места");
 			},
 				
 			error: function(error) {
@@ -72,9 +68,7 @@ $(document).ready(function(){
 	};
 
 	function getCarriageInfo() {
-		alert(document.getElementById('carriages').options[document.getElementById('carriages').selectedIndex].text);
 		let carriageNumber = document.getElementById('carriages').options[document.getElementById('carriages').selectedIndex].text;
-		alert(carriageNumber);
 		$.ajax({
 			url: "http://localhost:8080/traincompositions/getcarriageinfo/" + scheduleId + "/" + carriageNumber,
 			type: "GET",
@@ -84,13 +78,10 @@ $(document).ready(function(){
 				let blocksNumber = response[1]
                 let blockSeatsNumber = response[2]
                 let startPlaceNumber = response[3]
-				alert("startPlaceNumber");
-				alert(startPlaceNumber);
 
 				document.getElementById('price').textContent = price;
 
 				const table = document.getElementById("t-places");
-				alert(table);
 				let colCount = blocksNumber*3 + blocksNumber-1;
 				let rowCount = null;
 				let rowBrick = null;
@@ -196,11 +187,6 @@ $(document).ready(function(){
 	};
 
 	function clicker(rowNumber, colNumber) {
-		alert("тык2");
-		alert("Подтвердите покупку билета");
-		alert(rowNumber);
-		alert(colNumber);
-
 		let currentTr = document.querySelectorAll('#t-places tr')[rowNumber];
 
 		postNewTicket(currentTr.cells[colNumber].textContent);
