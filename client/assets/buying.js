@@ -7,6 +7,11 @@ $(document).ready(function(){
 	}
 
 	let scheduleId = getCookie("selected-schedule-id");
+	if (scheduleId == null) {
+		alert("Пожалуйста, выберите рейс");
+		window.location.replace("schedule.html");
+	}
+
 	alert(scheduleId);
 	eraseCookie("selected-schedule-id");
 	carriageFill()
@@ -198,29 +203,33 @@ $(document).ready(function(){
 
 		let currentTr = document.querySelectorAll('#t-places tr')[rowNumber];
 
-		//postNewTicket(currentTr.cells[colNumber].textContent);
-
-		//window.location.replace("my-tickets.html");
+		postNewTicket(currentTr.cells[colNumber].textContent);
     };
 	
 	async function postNewTicket(place) {
 
 		let varData = {
-		"clientId": getCookie("client-id"),
+		"clientId": user,
 		"scheduleId": scheduleId,
 		"railwayCarriage": document.getElementById('carriages').options[document.getElementById('carriages').selectedIndex].text,
 		"place": place,
 		"price": document.getElementById('price').textContent
 		};
-		let response = await fetch("http://localhost:8080/tickets", {
+		let response = await fetch("http://localhost:8080/tickets/create", {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8'
 			},
 			body: JSON.stringify(varData)
 		}, {mode: 'cors'}).then(function (response) {
-			console.log(response);
-			alert("Билет добавлен")
+
+			if (response.status === 201) {
+				alert("Билет добавлен");
+                window.location.replace("my-tickets.html");
+            } else {
+                alert("Пролучили код " + response.status)
+            }
+
 		}).catch(function (error) {
 			console.log("Не удалось создать билет", error);
 		});

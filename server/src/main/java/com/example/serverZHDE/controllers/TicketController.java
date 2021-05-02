@@ -1,6 +1,8 @@
 package com.example.serverZHDE.controllers;
 
 import com.example.serverZHDE.entities.Ticket;
+import com.example.serverZHDE.services.ClientService;
+import com.example.serverZHDE.services.ScheduleService;
 import com.example.serverZHDE.services.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,16 +19,14 @@ import java.util.Optional;
 public class TicketController {
 
     private final TicketService TicketService;
+    private final ClientService ClientService;
+    private final ScheduleService ScheduleService;
 
     @Autowired
-    public TicketController(TicketService TicketService) {
+    public TicketController(TicketService TicketService, ClientService ClientService, ScheduleService ScheduleService) {
         this.TicketService = TicketService;
-    }
-
-    @PostMapping()
-    public ResponseEntity<?> create(@RequestBody Ticket ticket) {
-        TicketService.create(ticket);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        this.ClientService = ClientService;
+        this.ScheduleService = ScheduleService;
     }
 
     @GetMapping()
@@ -102,5 +103,30 @@ public class TicketController {
         return occupiedPlacesList.size() != 0
                 ? new ResponseEntity<>(occupiedPlacesList, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody HashMap<String, String> ticketInfo) {
+        Ticket ticket = new Ticket();
+
+        System.out.println(ticketInfo);
+        try {
+            Integer id = TicketService.findAll().size();
+            ticket.setId(Long.parseLong(id.toString()));
+            ticket.setClient(ClientService.find(Long.parseLong(ticketInfo.get("clientId"))).get());
+            System.out.println("#1");
+            ticket.setSchedule(ScheduleService.find(Long.parseLong(ticketInfo.get("scheduleId"))).get());
+            System.out.println("#2");
+            ticket.setRailwayCarriage(Integer.parseInt(ticketInfo.get("railwayCarriage")));
+            System.out.println("#3");
+            ticket.setPlace(Integer.parseInt(ticketInfo.get("place")));
+            System.out.println("#4");
+            ticket.setPrice(Integer.parseInt(ticketInfo.get("price")));
+            System.out.println("#5");
+            TicketService.create(ticket);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
