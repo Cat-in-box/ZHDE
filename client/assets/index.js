@@ -14,7 +14,7 @@ $(document).ready(function(){
 				}
 
 			},
-			error: function(response) {
+			error: function(error) {
 				console.log("Что-то пошло не так", error);
 			}
 		});
@@ -34,7 +34,7 @@ $(document).ready(function(){
 			},
 			error: function(response) {
 				if (response.status == 400) {
-				alert("Неверный пароль");
+				alert("Неверный логин или пароль");
 				} else {
 				alert("Кажется, вы еще не зарегистрировались!");
 				}

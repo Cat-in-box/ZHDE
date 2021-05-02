@@ -68,5 +68,10 @@ $(document).ready(function(){
             console.log("Что-то пошло не так", error);
         });
     });
+
+	$("#b-exit").click(function () {
+		eraseCookie("user-id");
+		window.location.replace("index.html");
+	});
 	
 });
