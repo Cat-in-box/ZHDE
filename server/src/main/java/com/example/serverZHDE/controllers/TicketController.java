@@ -54,12 +54,15 @@ public class TicketController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         if (TicketService.find(id).isEmpty()){
+            System.out.println("Потеряли");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        System.out.println("MEOW");
         TicketService.delete(id);
+        System.out.println("PURR");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -90,6 +93,7 @@ public class TicketController {
     @GetMapping("/getoccupiedplaces/{scheduleId}")
     public ResponseEntity<?> getOccupiedPlacesList(@PathVariable(name = "scheduleId") Long scheduleId) {
         final List<Ticket> ticketList = TicketService.findAll();
+
         ArrayList<Integer> occupiedPlacesList = new ArrayList<>();
 
         for (Ticket ticket : ticketList) {
@@ -100,7 +104,7 @@ public class TicketController {
 
         System.out.println(occupiedPlacesList);
 
-        return occupiedPlacesList.size() != 0
+        return !occupiedPlacesList.isEmpty()
                 ? new ResponseEntity<>(occupiedPlacesList, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -110,7 +114,16 @@ public class TicketController {
         Ticket ticket = new Ticket();
 
         System.out.println(ticketInfo);
-        ticket.setId(Long.parseLong(Integer.toString(TicketService.findAll().size()+1)));
+
+        for (Integer i = 1; i < TicketService.findAll().size()+1; i++) {
+            if (TicketService.find(Long.parseLong(i.toString())).isEmpty()) {
+                ticket.setId(Long.parseLong(i.toString()));
+            }
+        }
+        if (ticket.getId() == null) {
+            ticket.setId(Long.parseLong(Integer.toString(TicketService.findAll().size() + 1)));
+        }
+
         try {
             ticket.setClient(ClientService.find(Long.parseLong(ticketInfo.get("clientId"))).get());
             System.out.println("#1");
