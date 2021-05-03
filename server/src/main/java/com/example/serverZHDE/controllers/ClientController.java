@@ -149,8 +149,8 @@ public class ClientController {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
         }
-
         Client client = new Client();
+
 
         client.setId(Long.parseLong(Integer.toString(ClientService.findAll().size()+1)));
 
