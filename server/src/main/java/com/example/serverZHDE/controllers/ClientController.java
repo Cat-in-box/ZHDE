@@ -151,8 +151,14 @@ public class ClientController {
         }
         Client client = new Client();
 
-
-        client.setId(Long.parseLong(Integer.toString(ClientService.findAll().size()+1)));
+        for (Integer i = 1; i < ClientService.findAll().size()+1; i++) {
+            if (ClientService.find(Long.parseLong(i.toString())).isEmpty()) {
+                client.setId(Long.parseLong(i.toString()));
+            }
+        }
+        if (client.getId() == null) {
+            client.setId(Long.parseLong(Integer.toString(ClientService.findAll().size()+1)));
+        }
 
         if (clientInfo.get("email").contains("@")) {
             client.setEmail(clientInfo.get("email"));
