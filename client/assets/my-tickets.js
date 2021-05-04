@@ -52,7 +52,7 @@ $(document).ready(function(){
 				url: "http://localhost:8080/tickets/delete/" + ticketId,
 				type: "DELETE",
 				dataType: "json",
-				success: function (){ 
+				success: function (response){ 
 					const table = document.getElementById("t-my-tickets");
 					while (table.rows.length > 2) {
 						table.deleteRow(table.rows.length - 1);

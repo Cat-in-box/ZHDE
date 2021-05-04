@@ -56,6 +56,7 @@ $(document).ready(function(){
 						
 					error: function(error) {
 						console.log("На этот рейс не купили ни одного билета");
+						getCarriageInfo()
 					}
 				});
 			};

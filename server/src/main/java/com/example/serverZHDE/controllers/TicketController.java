@@ -63,7 +63,7 @@ public class TicketController {
         System.out.println("MEOW");
         TicketService.delete(id);
         System.out.println("PURR");
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(0, HttpStatus.OK);
     }
 
     @GetMapping("/my/{id}")
