@@ -24,12 +24,6 @@ public class Station {
         return this.stationName;
     }
 
-    @OneToMany(mappedBy = "mainStation")
-    private List<NearStation> nearStationToList;
-
-    @OneToMany(mappedBy = "nearStation")
-    private List<NearStation> nearStationFromList;
-
     @OneToMany(mappedBy = "departureStation")
     private List<Trip> tripDepartureList;
 

@@ -7,15 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Column;
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/clients")
@@ -28,40 +21,11 @@ public class ClientController {
         this.ClientService = ClientService;
     }
 
-    @GetMapping()
-    public ResponseEntity<List<Client>> findAll(){
-        final List<Client> clientList = ClientService.findAll();
-        return clientList != null && !clientList.isEmpty()
-                ? new ResponseEntity<>(clientList, HttpStatus.OK)
-                : new ResponseEntity<>(clientList, HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> find(@PathVariable(name = "id") Long id){
-        final Optional<Client> client = ClientService.find(id);
-        return client.isPresent()
-                ? new ResponseEntity<>(client, HttpStatus.OK)
-                : new ResponseEntity<>(client, HttpStatus.NOT_FOUND);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
-        if (ClientService.find(id).isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        ClientService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping("/authorisation/{login}/{password}")
     public ResponseEntity<String> authorisation(@PathVariable(name = "login") String login, @PathVariable(name = "password") String password) {
         final List<Client> clientList = ClientService.findAll();
         for (Client client : clientList) {
-            System.out.println("login " + client.getEmail());
-            System.out.println(login);
             if (client.getEmail().equals(login)) {
-                System.out.println("password " + client.getUserPassword());
-
                 if (client.getUserPassword().equals(password)) {
                     return new ResponseEntity<>(client.getId().toString(), HttpStatus.OK);
                 } else {
@@ -134,8 +98,6 @@ public class ClientController {
             }
         }
 
-        System.out.println(clientInfo);
-
         ClientService.update(id, client);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -145,7 +107,7 @@ public class ClientController {
         for (Client existClient : ClientService.findAll()) {
             if (existClient.getEmail().equals(clientInfo.get("email"))){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
-            } else if (existClient.getPassport().equals(clientInfo.get("passport"))) {
+            } else if (existClient.getPassport().toString().equals(clientInfo.get("passport"))) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
         }
@@ -188,9 +150,6 @@ public class ClientController {
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        System.out.println(clientInfo);
-        System.out.println(client);
 
         ClientService.create(client);
         return new ResponseEntity<>(HttpStatus.OK);
