@@ -64,6 +64,11 @@ public class ClientController {
         if (ClientService.find(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        for (Client existClient : ClientService.findAll()) {
+            if (existClient.getPassport().toString().equals(clientInfo.get("passport"))) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+        }
 
         Client client = ClientService.find(id).get();
         if (!clientInfo.get("lastName").equals("") && clientInfo.get("lastName") != null) {

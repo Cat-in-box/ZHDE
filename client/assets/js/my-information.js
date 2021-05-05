@@ -47,6 +47,8 @@ $(document).ready(function(){
 
 				if (response.status === 400) {
 					alert("Введены некорректные данные")
+				} else if (response.status === 409) {
+					alert("Пользователь с таким паспортом уже существует!")
 				} else if (response.status === 200) {
 					alert("Ваши данные изменены!")
 					document.getElementById('passport').value = "";
