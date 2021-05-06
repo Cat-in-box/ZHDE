@@ -107,15 +107,20 @@ $(document).ready(function(){
 
 		function refillSchedule() {
 			const table = document.getElementById("t-schedule");
+			
 			while (table.rows.length > 2) {
 				table.deleteRow(table.rows.length - 1);
 			}
+			let row = table.insertRow(1);
 
-			let td = document.querySelectorAll('#t-schedule td');
+			let th = document.querySelectorAll('#t-schedule th');
 
-			for (let i = 0; i < td.length; i++) {
-				td[i].textContent = "";
+			for (let i = 0; i < th.length; i++) {
+				let cell = row.insertCell(i);
+				cell.innerHTML = "";
 			}
+
+			table.deleteRow(2);
 			
 			getSchedule();
 		}
