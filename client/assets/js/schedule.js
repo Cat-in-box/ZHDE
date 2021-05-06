@@ -84,7 +84,7 @@ $(document).ready(function(){
 				},
 				error: function(error) {
 					let td = document.querySelectorAll('#t-schedule td');
-					td[0].textContent = "Билетов не найдено"
+					td[0].textContent = "Рейсов не найдено"
 
 				}
 			});
