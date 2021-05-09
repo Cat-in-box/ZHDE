@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * Сущность композиции поезда в MySQL БД
+ */
 @Entity
 @Data
 @NoArgsConstructor

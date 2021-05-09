@@ -8,6 +8,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Сущность поезда в MySQL БД
+ */
 @Entity
 @Data
 @NoArgsConstructor

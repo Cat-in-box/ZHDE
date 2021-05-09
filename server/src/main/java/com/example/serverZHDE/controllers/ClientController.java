@@ -10,41 +10,69 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.util.*;
 
+
+/**
+ * The type Client controller
+ */
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
 
     private final ClientService ClientService;
 
+    /**
+     * Instantiates a new Client controller.
+     *
+     * @param ClientService the client service
+     */
     @Autowired
     public ClientController(ClientService ClientService) {
         this.ClientService = ClientService;
     }
 
+    /**
+     * Авторизация клиента
+     *
+     * @param login - логин клиента
+     * @param password - пароль клиента
+     * @return response entity
+     */
     @GetMapping("/authorisation/{login}/{password}")
     public ResponseEntity<String> authorisation(@PathVariable(name = "login") String login, @PathVariable(name = "password") String password) {
         final List<Client> clientList = ClientService.findAll();
+        // Ищем клиента по переданному логину
         for (Client client : clientList) {
+            // Если нашли, проверяем переданный пароль
             if (client.getEmail().equals(login)) {
+                // Пароль совпал - возвращаем id клиента для cookie
                 if (client.getUserPassword().equals(password)) {
                     return new ResponseEntity<>(client.getId().toString(), HttpStatus.OK);
+                // Клиент допустил ошибку в пароле
                 } else {
                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
             }
         }
 
+        //Если не нашли такого клиента
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Возвращаем информацию о клиенте для личного кабинета
+     *
+     * @param id - id клиента в БД
+     * @return response entity
+     */
     @GetMapping("/info/{id}")
     public ResponseEntity<Map<String, String>> getInfo(@PathVariable(name = "id") Long id) {
+        // Проверка на существования клиента с переданным id
         Optional<Client> client = ClientService.find(id);
         if (client.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Client resultClient = client.get();
-
+        // Собираем информацию о клиенте в HashMap
         Map<String, String> info = new HashMap<>();
 
         info.put("email", resultClient.getEmail());
@@ -59,11 +87,20 @@ public class ClientController {
         return new ResponseEntity<>(info, HttpStatus.OK);
     }
 
+    /**
+     * Обновление данных о клиенте
+     *
+     * @param id - id клиента в БД
+     * @param clientInfo - словарь новых данных
+     * @return response entity
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody HashMap<String, String> clientInfo) {
+        // Проверка на существование клиента с переданным id
         if (ClientService.find(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        // Проверка на уникальность переданного паспорта в БД
         for (Client existClient : ClientService.findAll()) {
             if (existClient.getPassport().toString().equals(clientInfo.get("passport"))) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -71,6 +108,7 @@ public class ClientController {
         }
 
         Client client = ClientService.find(id).get();
+        // Если для данного параметра пришло обновленное значение, перезаписываем, если нет, оставляем старое
         if (!clientInfo.get("lastName").equals("") && clientInfo.get("lastName") != null) {
             client.setLastName(clientInfo.get("lastName"));
         }
@@ -103,12 +141,20 @@ public class ClientController {
             }
         }
 
+        // Обновляем запись в БД
         ClientService.update(id, client);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Создание нового клиента
+     *
+     * @param clientInfo - словарь информации о клиенте
+     * @return response entity
+     */
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody HashMap<String, String> clientInfo) {
+        // Проверка на уникальность email'а и пасспорта в БД
         for (Client existClient : ClientService.findAll()) {
             if (existClient.getEmail().equals(clientInfo.get("email"))){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -117,7 +163,7 @@ public class ClientController {
             }
         }
         Client client = new Client();
-
+        // Генерация нового id
         for (Integer i = 1; i < ClientService.findAll().size()+1; i++) {
             if (ClientService.find(Long.parseLong(i.toString())).isEmpty()) {
                 client.setId(Long.parseLong(i.toString()));
@@ -127,6 +173,7 @@ public class ClientController {
             client.setId(Long.parseLong(Integer.toString(ClientService.findAll().size()+1)));
         }
 
+        // Заносим новые значения в сущность клиента
         if (clientInfo.get("email").contains("@")) {
             client.setEmail(clientInfo.get("email"));
         } else {
@@ -156,6 +203,7 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        // Создаем клиента в БД
         ClientService.create(client);
         return new ResponseEntity<>(HttpStatus.OK);
     }

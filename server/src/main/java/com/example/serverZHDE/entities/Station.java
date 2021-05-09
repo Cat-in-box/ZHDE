@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Сущность станции в MySQL БД
+ */
 @Entity
 @NoArgsConstructor
 @Table(name = "Stations")

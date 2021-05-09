@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Сущность клиента (пользователя) в MySQL БД
+ */
 @Entity
 @NoArgsConstructor
 @Data

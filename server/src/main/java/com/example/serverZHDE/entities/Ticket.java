@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * Сущность билета в MySQL БД
+ */
 @Entity
 @Data
 @NoArgsConstructor

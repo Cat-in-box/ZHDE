@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Сущность типа вагона в MySQL БД
+ */
 @Entity
 @Data
 @NoArgsConstructor
