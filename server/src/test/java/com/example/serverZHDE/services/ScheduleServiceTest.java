@@ -1,7 +1,7 @@
 package com.example.serverZHDE.services;
 
-import com.example.serverZHDE.entities.Client;
-import com.example.serverZHDE.repositories.ClientRepository;
+import com.example.serverZHDE.entities.Schedule;
+import com.example.serverZHDE.repositories.ScheduleRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,51 +16,51 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ClientServiceTest {
+public class ScheduleServiceTest {
 
     @Autowired
-    private ClientService service;
+    private ScheduleService service;
 
     @MockBean
-    private ClientRepository repository;
+    private ScheduleRepository repository;
 
     @Test
     public void create() {
-        Client client = new Client();
-        Client expected = new Client();
-        Mockito.doReturn(expected).when(repository).save(client);
+        Schedule schedule = new Schedule();
+        Schedule expected = new Schedule();
+        Mockito.doReturn(expected).when(repository).save(schedule);
         System.out.println(expected);
-        Assert.assertEquals(service.create(client), expected);
+        Assert.assertEquals(service.create(schedule), expected);
     }
 
     @Test
     public void findAll() {
-        Client client = new Client();
-        ArrayList<Client> expected = new ArrayList<>();
-        expected.add(client);
+        Schedule schedule = new Schedule();
+        ArrayList<Schedule> expected = new ArrayList<>();
+        expected.add(schedule);
         Mockito.when(service.findAll()).thenReturn(expected);
         Assert.assertEquals(service.findAll(), expected);
     }
 
     @Test
     public void find() {
-        Optional<Client> expected = Optional.of(new Client());
+        Optional<Schedule> expected = Optional.of(new Schedule());
         Mockito.doReturn(expected).when(repository).findById(1L);
         Assert.assertEquals(service.find(1L), expected);
     }
 
     @Test
     public void update() {
-        Client client = new Client();
-        Client expected = new Client();
-        Mockito.doReturn(expected).when(repository).save(client);
+        Schedule schedule = new Schedule();
+        Schedule expected = new Schedule();
+        Mockito.doReturn(expected).when(repository).save(schedule);
         System.out.println(expected);
-        Assert.assertEquals(service.create(client), expected);
+        Assert.assertEquals(service.create(schedule), expected);
     }
 
     @Test
     public void delete() {
-        Mockito.doReturn(Optional.of(new Client())).when(repository).findById(1L);
+        Mockito.doReturn(Optional.of(new Schedule())).when(repository).findById(1L);
         Assert.assertTrue(service.delete(1L));
     }
 

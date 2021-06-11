@@ -30,8 +30,8 @@ public class TripService {
      *
      * @param trip - новая сущность Trip
      */
-    public void create(Trip trip){
-        tripRepository.save(trip);
+    public Trip create(Trip trip){
+        return tripRepository.save(trip);
     }
 
     /**
@@ -56,11 +56,9 @@ public class TripService {
     /**
      * Обновление данных существующего направления
      *
-     * @param id - id направления в БД
      * @param trip - обновленная сущность Trip для внесения в БД
      */
-    public void update(Long id, Trip trip){
-        tripRepository.deleteById(id);
+    public void update(Trip trip){
         tripRepository.save(trip);
     }
 
@@ -69,8 +67,13 @@ public class TripService {
      *
      * @param id - id направления в БД
      */
-    public void delete(Long id){
-        tripRepository.deleteById(id);
+    public Boolean delete(Long id){
+        try {
+            tripRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

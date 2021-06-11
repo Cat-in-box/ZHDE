@@ -31,8 +31,8 @@ public class TrainService {
      *
      * @param train - новая сущность Train
      */
-    public void create(Train train){
-        trainRepository.save(train);
+    public Train create(Train train){
+        return trainRepository.save(train);
     }
 
     /**
@@ -57,11 +57,9 @@ public class TrainService {
     /**
      * Обновление данных существующего поезда
      *
-     * @param id - id поезда в БД
      * @param train - обновленная сущность Train для внесения в БД
      */
-    public void update(Long id, Train train){
-        trainRepository.deleteById(id);
+    public void update(Train train){
         trainRepository.save(train);
     }
 
@@ -70,8 +68,13 @@ public class TrainService {
      *
      * @param id - id поезда в БД
      */
-    public void delete(Long id){
-        trainRepository.deleteById(id);
+    public Boolean delete(Long id){
+        try {
+            trainRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

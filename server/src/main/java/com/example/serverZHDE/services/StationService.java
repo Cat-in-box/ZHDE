@@ -31,8 +31,8 @@ public class StationService {
      *
      * @param station - новая сущность Station
      */
-    public void create(Station station){
-        stationRepository.save(station);
+    public Station create(Station station){
+        return stationRepository.save(station);
     }
 
     /**
@@ -57,11 +57,9 @@ public class StationService {
     /**
      * Обновление данных существующей станции
      *
-     * @param id - id станции в БД
      * @param station - обновленная сущность Station для внесения в БД
      */
-    public void update(Long id, Station station){
-        stationRepository.deleteById(id);
+    public void update(Station station){
         stationRepository.save(station);
     }
 
@@ -70,8 +68,13 @@ public class StationService {
      *
      * @param id - id станции в БД
      */
-    public void delete(Long id){
-        stationRepository.deleteById(id);
+    public Boolean delete(Long id){
+        try {
+            stationRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

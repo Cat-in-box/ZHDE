@@ -31,8 +31,8 @@ public class ScheduleService {
      *
      * @param schedule - новая сущность Schedule
      */
-    public void create(Schedule schedule){
-        scheduleRepository.save(schedule);
+    public Schedule create(Schedule schedule){
+        return scheduleRepository.save(schedule);
     }
 
     /**
@@ -57,11 +57,9 @@ public class ScheduleService {
     /**
      * Обновление данных существующего рейса
      *
-     * @param id - id рейса в БД
      * @param schedule - обновленная сущность Schedule для внесения в БД
      */
-    public void update(Long id, Schedule schedule){
-        scheduleRepository.deleteById(id);
+    public void update(Schedule schedule){
         scheduleRepository.save(schedule);
     }
 
@@ -70,8 +68,13 @@ public class ScheduleService {
      *
      * @param id - id рейса в БД
      */
-    public void delete(Long id){
-        scheduleRepository.deleteById(id);
+    public Boolean delete(Long id){
+        try {
+            scheduleRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

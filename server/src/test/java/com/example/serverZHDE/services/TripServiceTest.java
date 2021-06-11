@@ -1,7 +1,7 @@
 package com.example.serverZHDE.services;
 
-import com.example.serverZHDE.entities.Client;
-import com.example.serverZHDE.repositories.ClientRepository;
+import com.example.serverZHDE.entities.Trip;
+import com.example.serverZHDE.repositories.TripRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,51 +16,51 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ClientServiceTest {
+public class TripServiceTest {
 
     @Autowired
-    private ClientService service;
+    private TripService service;
 
     @MockBean
-    private ClientRepository repository;
+    private TripRepository repository;
 
     @Test
     public void create() {
-        Client client = new Client();
-        Client expected = new Client();
-        Mockito.doReturn(expected).when(repository).save(client);
+        Trip trip = new Trip();
+        Trip expected = new Trip();
+        Mockito.doReturn(expected).when(repository).save(trip);
         System.out.println(expected);
-        Assert.assertEquals(service.create(client), expected);
+        Assert.assertEquals(service.create(trip), expected);
     }
 
     @Test
     public void findAll() {
-        Client client = new Client();
-        ArrayList<Client> expected = new ArrayList<>();
-        expected.add(client);
+        Trip trip = new Trip();
+        ArrayList<Trip> expected = new ArrayList<>();
+        expected.add(trip);
         Mockito.when(service.findAll()).thenReturn(expected);
         Assert.assertEquals(service.findAll(), expected);
     }
 
     @Test
     public void find() {
-        Optional<Client> expected = Optional.of(new Client());
+        Optional<Trip> expected = Optional.of(new Trip());
         Mockito.doReturn(expected).when(repository).findById(1L);
         Assert.assertEquals(service.find(1L), expected);
     }
 
     @Test
     public void update() {
-        Client client = new Client();
-        Client expected = new Client();
-        Mockito.doReturn(expected).when(repository).save(client);
+        Trip trip = new Trip();
+        Trip expected = new Trip();
+        Mockito.doReturn(expected).when(repository).save(trip);
         System.out.println(expected);
-        Assert.assertEquals(service.create(client), expected);
+        Assert.assertEquals(service.create(trip), expected);
     }
 
     @Test
     public void delete() {
-        Mockito.doReturn(Optional.of(new Client())).when(repository).findById(1L);
+        Mockito.doReturn(Optional.of(new Trip())).when(repository).findById(1L);
         Assert.assertTrue(service.delete(1L));
     }
 

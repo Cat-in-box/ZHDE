@@ -31,8 +31,8 @@ public class TrainCompositionService {
      *
      * @param trainComposition - новая сущность TrainComposition
      */
-    public void create(TrainComposition trainComposition){
-        trainCompositionRepository.save(trainComposition);
+    public TrainComposition create(TrainComposition trainComposition){
+        return trainCompositionRepository.save(trainComposition);
     }
 
     /**
@@ -57,11 +57,9 @@ public class TrainCompositionService {
     /**
      * Обновление данных существующей композиции
      *
-     * @param id - id композиции в БД
      * @param trainComposition - обновленная сущность TrainComposition для внесения в БД
      */
-    public void update(Long id, TrainComposition trainComposition){
-        trainCompositionRepository.deleteById(id);
+    public void update(TrainComposition trainComposition){
         trainCompositionRepository.save(trainComposition);
     }
 
@@ -70,8 +68,13 @@ public class TrainCompositionService {
      *
      * @param id - id композиции в БД
      */
-    public void delete(Long id){
-        trainCompositionRepository.deleteById(id);
+    public Boolean delete(Long id){
+        try {
+            trainCompositionRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

@@ -31,8 +31,8 @@ public class CarriageTypeService {
      *
      * @param carriageType - новая сущность СarriageType
      */
-    public void create(CarriageType carriageType){
-        carriageTypeRepository.save(carriageType);
+    public CarriageType create(CarriageType carriageType){
+        return carriageTypeRepository.save(carriageType);
     }
 
     /**
@@ -57,11 +57,9 @@ public class CarriageTypeService {
     /**
      * Обновление данных существующего типа вагона
      *
-     * @param id - id типа вагона в БД
      * @param carriageType - обновленная сущность CarriageType для внесения в БД
      */
-    public void update(Long id, CarriageType carriageType){
-        carriageTypeRepository.deleteById(id);
+    public void update(CarriageType carriageType){
         carriageTypeRepository.save(carriageType);
     }
 
@@ -70,8 +68,13 @@ public class CarriageTypeService {
      *
      * @param id - id типа вагона в БД
      */
-    public void delete(Long id){
-        carriageTypeRepository.deleteById(id);
+    public Boolean delete(Long id){
+        try {
+            carriageTypeRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

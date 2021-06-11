@@ -31,8 +31,8 @@ public class TicketService {
      *
      * @param ticket - новая сущность Ticket
      */
-    public void create(Ticket ticket){
-        ticketRepository.save(ticket);
+    public Ticket create(Ticket ticket){
+        return ticketRepository.save(ticket);
     }
 
     /**
@@ -57,11 +57,9 @@ public class TicketService {
     /**
      * Обновление данных существующего билета
      *
-     * @param id - id билета в БД
      * @param ticket - обновленная сущность Ticket для внесения в БД
      */
-    public void update(Long id, Ticket ticket){
-        ticketRepository.deleteById(id);
+    public void update(Ticket ticket){
         ticketRepository.save(ticket);
     }
 
@@ -70,8 +68,13 @@ public class TicketService {
      *
      * @param id - id билета в БД
      */
-    public void delete(Long id){
-        ticketRepository.deleteById(id);
+    public Boolean delete(Long id){
+        try {
+            ticketRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
