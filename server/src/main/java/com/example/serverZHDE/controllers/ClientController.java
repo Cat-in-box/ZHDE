@@ -142,7 +142,7 @@ public class ClientController {
         }
 
         // Обновляем запись в БД
-        ClientService.update(id, client);
+        ClientService.update(client);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -31,8 +31,8 @@ public class ClientService {
      *
      * @param client - новая сущность Client
      */
-    public void create(Client client){
-        clientRepository.save(client);
+    public Client create(Client client){
+        return clientRepository.save(client);
     }
 
     /**
@@ -57,11 +57,10 @@ public class ClientService {
     /**
      * Обновление данных существующего клиента
      *
-     * @param id - id клиента в БД
      * @param client - обновленная сущность Client для внесения в БД
      */
-    public void update(Long id, Client client){
-        clientRepository.save(client);
+    public Client update(Client client){
+        return clientRepository.save(client);
     }
 
     /**
@@ -69,10 +68,14 @@ public class ClientService {
      *
      * @param id - id клиента в БД
      */
-    public void delete(Long id){
-        clientRepository.deleteById(id);
+    public Boolean delete(Long id) {
+        try {
+            clientRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
-
 }
 
 
